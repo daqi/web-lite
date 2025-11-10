@@ -47,8 +47,6 @@ export default defineConfig({
 在 `package.json` 中添加了以下测试命令:
 
 - `pnpm test` - 运行所有测试
-- `pnpm test:watch` - 监听模式运行测试
-- `pnpm test:ui` - 使用 UI 界面运行测试
 - `pnpm test:coverage` - 运行测试并生成覆盖率报告
 
 ## 测试文件结构
@@ -151,46 +149,6 @@ it("应该访问受保护的路由", async () => {
 });
 ```
 
-## 测试覆盖范围
-
-### Auth 模块测试 (tests/integration/auth.test.ts)
-
-✅ 已实现:
-- 用户注册
-- 用户登录
-- Token 刷新
-- 用户登出
-- 获取用户信息
-- 错误处理(重复用户名、无效密码等)
-
-### API 模块测试 (tests/integration/api.test.ts)
-
-✅ 已实现:
-- **User API**: CRUD 操作
-- **Product API**: CRUD 操作
-- **Order API**: CRUD 操作
-
-## 当前测试状态
-
-```
-Test Files  2
-Tests      34 total
-           25 passed ✓
-           9 failed ✗
-```
-
-### 已通过的测试
-- ✓ User CRUD 基本操作
-- ✓ Product CRUD 完整流程
-- ✓ Auth 注册/登录/刷新/登出
-- ✓ 输入验证
-
-### 待修复的测试失败
-主要是现有 API 代码的问题,不是测试框架问题:
-
-1. **错误处理**: 某些404场景返回500(需要改进错误处理)
-2. **Order创建**: 依赖关系问题(需要检查 validator schema)
-3. **Auth登录**: bcrypt密码比对可能有时序问题
 
 ## 运行测试
 
@@ -221,13 +179,6 @@ pnpm test:coverage
 | 代码覆盖率 | ❌ | ✓ 内置支持 |
 | 监听模式 | ❌ | ✓ |
 
-## 下一步改进
-
-1. 修复现有 API 错误处理逻辑
-2. 增加单元测试
-3. 添加更多边界case测试
-4. 集成到 CI/CD 流程
-5. 提升代码覆盖率到80%+
 
 ## 参考资料
 
