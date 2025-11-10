@@ -1,0 +1,49 @@
+{
+  "name": "web-lite",
+  "version": "1.0.0",
+  "description": "Drizzle ORM + Hono + Valibot + Plop 完整示例项目",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "generate:validators": "tsx scripts/generate-validators.ts",
+    "plop": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f postgres",
+    "setup": "docker-compose up -d && sleep 3 && pnpm run db:push"
+  },
+  "keywords": [
+    "hono",
+    "drizzle",
+    "valibot",
+    "plop"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/valibot-validator": "^0.4.0",
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.36.4",
+    "hono": "^4.6.14",
+    "pg": "^8.13.1",
+    "valibot": "^0.42.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "@types/pluralize": "^0.0.33",
+    "change-case": "^5.4.4",
+    "cross-env": "^10.1.0",
+    "drizzle-kit": "^0.28.1",
+    "plop": "^4.0.1",
+    "pluralize": "^8.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

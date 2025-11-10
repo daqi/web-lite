@@ -1,0 +1,29 @@
+import { db } from '../../db/client';
+import { {{camelCase name}} } from '../../db/schema/{{camelCase name}}';
+import { eq } from 'drizzle-orm';
+import type { Create{{pascalCase name}}Input, Update{{pascalCase name}}Input } from '../../validators/{{camelCase name}}.validator';
+
+export class {{pascalCase name}}Repository {
+  async findAll() {
+    return await db.select().from({{camelCase name}});
+  }
+
+  async findById(id: number) {
+    const result = await db.select().from({{camelCase name}}).where(eq({{camelCase name}}.id, id));
+    return result[0] || null;
+  }
+
+  async create(data: Create{{pascalCase name}}Input) {
+    const result = await db.insert({{camelCase name}}).values(data).returning();
+    return result[0];
+  }
+
+  async update(id: number, data: Update{{pascalCase name}}Input) {
+    const result = await db.update({{camelCase name}}).set(data).where(eq({{camelCase name}}.id, id)).returning();
+    return result[0] || null;
+  }
+
+  async delete(id: number) {
+    await db.delete({{camelCase name}}).where(eq({{camelCase name}}.id, id));
+  }
+}
