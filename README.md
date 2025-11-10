@@ -1,6 +1,15 @@
 # Web Lite
 
-一个基于 **Drizzle ORM + Hono + Valibot + Plop** 的完整可运行示例项目。
+一个基于 **Drizzle ORM + Hono + Valibot + Plop** 的可运行示例。
+
+这个架构以轻量化为目标，且具备现代 TypeScript 全栈最佳实践。
+
+适合的使用场景包括：
+- SaaS 或 BaaS 轻后端
+- 个人项目 / 独立开发者
+- Serverless API 服务
+- 快速验证型 MVP
+- 内部工具平台
 
 ## ✨ 特性
 
