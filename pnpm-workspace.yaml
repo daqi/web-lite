@@ -1,2 +1,2 @@
-ignoredBuiltDependencies:
-  - better-sqlite3
+onlyBuiltDependencies:
+  - simple-git-hooks
