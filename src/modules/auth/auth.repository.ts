@@ -26,10 +26,7 @@ export class AuthRepository {
   }
 
   async updateLastLogin(userId: number) {
-    await db
-      .update(authUsers)
-      .set({ lastLoginAt: new Date() })
-      .where(eq(authUsers.id, userId));
+    await db.update(authUsers).set({ lastLoginAt: new Date() }).where(eq(authUsers.id, userId));
   }
 
   // 刷新令牌相关
@@ -50,12 +47,7 @@ export class AuthRepository {
     const result = await db
       .select()
       .from(refreshTokens)
-      .where(
-        and(
-          eq(refreshTokens.token, token),
-          gt(refreshTokens.expiresAt, new Date())
-        )
-      );
+      .where(and(eq(refreshTokens.token, token), gt(refreshTokens.expiresAt, new Date())));
     return result[0] || null;
   }
 
@@ -75,12 +67,7 @@ export class AuthRepository {
     const result = await db
       .select()
       .from(refreshTokens)
-      .where(
-        and(
-          eq(refreshTokens.userId, userId),
-          gt(refreshTokens.expiresAt, new Date())
-        )
-      );
+      .where(and(eq(refreshTokens.userId, userId), gt(refreshTokens.expiresAt, new Date())));
     return result.length;
   }
 

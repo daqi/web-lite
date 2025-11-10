@@ -31,12 +31,15 @@ function mapDrizzleTypeToValibot(col: any): string {
   if (typeUpper.includes('TEXT')) return 'v.string()';
 
   // 处理数字类型
-  if (typeUpper.includes('SERIAL') || typeUpper.includes('INTEGER') || typeUpper.includes('INT')) return 'v.number()';
-  if (typeUpper.includes('NUMERIC') || typeUpper.includes('DECIMAL')) return 'v.pipe(v.string(), v.decimal())';
+  if (typeUpper.includes('SERIAL') || typeUpper.includes('INTEGER') || typeUpper.includes('INT'))
+    return 'v.number()';
+  if (typeUpper.includes('NUMERIC') || typeUpper.includes('DECIMAL'))
+    return 'v.pipe(v.string(), v.decimal())';
 
   // 处理布尔和日期
   if (typeUpper.includes('BOOLEAN')) return 'v.boolean()';
-  if (typeUpper.includes('TIMESTAMP') || typeUpper.includes('DATE')) return 'v.optional(v.pipe(v.string(), v.isoTimestamp()))';
+  if (typeUpper.includes('TIMESTAMP') || typeUpper.includes('DATE'))
+    return 'v.optional(v.pipe(v.string(), v.isoTimestamp()))';
 
   // 如果无法识别类型,打印警告
   console.warn(`⚠️  Unknown column type for ${col.name}: ${columnType}`);
@@ -96,8 +99,9 @@ export type Update${pascalCase(singularName)}Input = v.InferOutput<typeof update
 
 // 获取 schema 目录中的所有 .ts 文件(排除 index.ts)
 async function loadSchemas() {
-  const files = fs.readdirSync(schemaDir)
-    .filter(file => file.endsWith('.ts') && file !== 'index.ts');
+  const files = fs
+    .readdirSync(schemaDir)
+    .filter((file) => file.endsWith('.ts') && file !== 'index.ts');
 
   const tables: Record<string, any> = {};
 
@@ -113,7 +117,7 @@ async function loadSchemas() {
         // 检查是否是 Drizzle 表定义 (通过 Symbol 检查)
         if (exportValue && typeof exportValue === 'object') {
           const symbols = Object.getOwnPropertySymbols(exportValue);
-          const hasTableSymbol = symbols.some(s => s.toString().includes('IsDrizzleTable'));
+          const hasTableSymbol = symbols.some((s) => s.toString().includes('IsDrizzleTable'));
 
           if (hasTableSymbol) {
             tables[exportName] = exportValue;
@@ -134,9 +138,10 @@ function getExistingValidators(): Set<string> {
   if (!fs.existsSync(outputDir)) return new Set();
 
   return new Set(
-    fs.readdirSync(outputDir)
-      .filter(file => file.endsWith('.validator.ts'))
-      .map(file => file.replace('.validator.ts', ''))
+    fs
+      .readdirSync(outputDir)
+      .filter((file) => file.endsWith('.validator.ts'))
+      .map((file) => file.replace('.validator.ts', '')),
   );
 }
 
@@ -169,14 +174,12 @@ async function main() {
   }
 
   // 检查是否有多余的 validator 文件
-  const tableNamesSet = new Set(tableNames.map(name => camelCase(pluralize.singular(name))));
-  const orphanedValidators = existingValidatorNames.filter(
-    name => !tableNamesSet.has(name)
-  );
+  const tableNamesSet = new Set(tableNames.map((name) => camelCase(pluralize.singular(name))));
+  const orphanedValidators = existingValidatorNames.filter((name) => !tableNamesSet.has(name));
 
   if (orphanedValidators.length > 0) {
     console.log(`\n⚠️  Found ${orphanedValidators.length} orphaned validator(s):`);
-    orphanedValidators.forEach(name => {
+    orphanedValidators.forEach((name) => {
       console.log(`   • ${name}.validator.ts (no matching schema)`);
     });
     console.log('\n💡 Consider removing orphaned validators manually.');

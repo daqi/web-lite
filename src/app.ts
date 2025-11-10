@@ -11,7 +11,7 @@ app.get('/', (c) => {
   return c.json({
     message: 'Web Lite API',
     version: '1.0.0',
-    status: 'running'
+    status: 'running',
   });
 });
 
@@ -24,9 +24,12 @@ app.route('/order', orderRoute);
 // 错误处理
 app.onError((err, c) => {
   console.error('Error:', err);
-  return c.json({
-    error: err.message || 'Internal Server Error'
-  }, 500);
+  return c.json(
+    {
+      error: err.message || 'Internal Server Error',
+    },
+    500,
+  );
 });
 
 export default app;
