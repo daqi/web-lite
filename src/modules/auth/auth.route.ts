@@ -30,8 +30,11 @@ route.post('/register', vValidator('json', registerSchema), async (c) => {
 route.post('/login', vValidator('json', loginSchema), async (c) => {
   const body = c.req.valid('json');
 
+  // 获取设备信息(User-Agent)
+  const deviceInfo = c.req.header('User-Agent') || 'Unknown Device';
+
   try {
-    const result = await service.login(body);
+    const result = await service.login(body, deviceInfo);
     return c.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Login failed';

@@ -58,8 +58,10 @@ export class AuthService {
 
   /**
    * 用户登录
+   * 支持多设备同时登录,最多保留5个有效刷新令牌
+   * 超过限制时删除最旧的令牌
    */
-  async login(data: LoginInput) {
+  async login(data: LoginInput, deviceInfo?: string) {
     // 查找用户
     const user = await this.repository.findUserByUsername(data.username);
     if (!user) {
@@ -90,12 +92,21 @@ export class AuthService {
     const accessToken = JWTService.generateAccessToken(payload);
     const refreshToken = JWTService.generateRefreshToken(payload);
 
-    // 保存刷新令牌(为了避免重复token,先删除该用户的所有旧token)
-    // 注意:这会导致其他设备登出,如果需要多设备同时登录,需要改进这个逻辑
-    await this.repository.deleteUserRefreshTokens(user.id);
+    // 清理过期的刷新令牌
+    await this.repository.cleanExpiredTokens();
 
+    // 检查用户当前有效的刷新令牌数量
+    const MAX_DEVICES = 5; // 最多支持5个设备同时登录
+    const currentTokenCount = await this.repository.countUserRefreshTokens(user.id);
+
+    // 如果超过设备限制,删除最旧的令牌
+    if (currentTokenCount >= MAX_DEVICES) {
+      await this.repository.deleteOldestUserRefreshToken(user.id);
+    }
+
+    // 保存新的刷新令牌
     const expiresAt = JWTService.getRefreshTokenExpiryDate();
-    await this.repository.createRefreshToken(user.id, refreshToken, expiresAt);
+    await this.repository.createRefreshToken(user.id, refreshToken, expiresAt, deviceInfo);
 
     return {
       user: {

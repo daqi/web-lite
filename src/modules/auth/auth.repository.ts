@@ -1,6 +1,6 @@
 import { db } from '../../db/client';
 import { authUsers, refreshTokens } from '../../db/schema/auth';
-import { eq, and, gt } from 'drizzle-orm';
+import { eq, and, gt, lt } from 'drizzle-orm';
 import type { RegisterInput } from '../../validators/auth.validator';
 
 export class AuthRepository {
@@ -33,13 +33,14 @@ export class AuthRepository {
   }
 
   // 刷新令牌相关
-  async createRefreshToken(userId: number, token: string, expiresAt: Date) {
+  async createRefreshToken(userId: number, token: string, expiresAt: Date, deviceInfo?: string) {
     const result = await db
       .insert(refreshTokens)
       .values({
         userId,
         token,
         expiresAt,
+        deviceInfo,
       })
       .returning();
     return result[0];
@@ -67,6 +68,31 @@ export class AuthRepository {
   }
 
   async cleanExpiredTokens() {
-    await db.delete(refreshTokens).where(gt(refreshTokens.expiresAt, new Date()));
+    await db.delete(refreshTokens).where(lt(refreshTokens.expiresAt, new Date()));
+  }
+
+  async countUserRefreshTokens(userId: number) {
+    const result = await db
+      .select()
+      .from(refreshTokens)
+      .where(
+        and(
+          eq(refreshTokens.userId, userId),
+          gt(refreshTokens.expiresAt, new Date())
+        )
+      );
+    return result.length;
+  }
+
+  async deleteOldestUserRefreshToken(userId: number) {
+    const tokens = await db
+      .select()
+      .from(refreshTokens)
+      .where(eq(refreshTokens.userId, userId))
+      .orderBy(refreshTokens.createdAt);
+
+    if (tokens.length > 0) {
+      await db.delete(refreshTokens).where(eq(refreshTokens.id, tokens[0].id));
+    }
   }
 }

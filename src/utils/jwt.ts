@@ -1,4 +1,5 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '1h') as SignOptions['expiresIn'];
@@ -22,9 +23,12 @@ export class JWTService {
 
   /**
    * 生成刷新令牌
+   * 添加随机字符串确保每次生成的token都是唯一的
    */
   static generateRefreshToken(payload: JWTPayload): string {
-    return jwt.sign(payload, JWT_SECRET, {
+    // 添加随机jti(JWT ID)确保每次生成的token都不同
+    const jti = randomBytes(16).toString('hex');
+    return jwt.sign({ ...payload, jti }, JWT_SECRET, {
       expiresIn: REFRESH_TOKEN_EXPIRES_IN,
     });
   }

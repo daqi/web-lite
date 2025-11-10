@@ -15,6 +15,7 @@ export const refreshTokens = pgTable('refresh_tokens', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').notNull(),
   token: varchar('token', { length: 500 }).notNull().unique(),
+  deviceInfo: varchar('device_info', { length: 255 }), // 设备信息(可选)
   expiresAt: timestamp('expires_at').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });

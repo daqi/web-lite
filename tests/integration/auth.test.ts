@@ -63,7 +63,10 @@ describe("Auth API 集成测试", () => {
       // 登录第一个测试中注册的testuser
       const response = await app.request("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "Test Client"
+        },
         body: JSON.stringify({
           username: testUser.username,
           password: testUser.password,
