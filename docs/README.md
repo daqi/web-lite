@@ -2,40 +2,16 @@
 
 欢迎来到 Web Lite 项目文档中心!这里包含了所有相关的技术文档和指南。
 
-## 📖 文档目录
+## � 文档目录
 
-### 🚀 快速开始
-- **[QUICKSTART.md](./QUICKSTART.md)** - 快速上手指南,5分钟启动项目
-
-### 🏗️ 架构设计
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - 项目架构说明
-  - 技术栈介绍
-  - 目录结构
-  - 设计模式 (Repository-Service-Route)
-  - 核心概念
-
-### 🗄️ 数据库
-- **[DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md)** - 数据库设计文档
-  - 表结构定义
-  - 关系设计
-  - 字段说明
-- **[DOCKER.md](./DOCKER.md)** - Docker 使用指南
-  - PostgreSQL 容器配置
-  - Docker Compose 使用
-  - 常用命令
-
-### 🤖 自动化工具
-- **[VALIDATOR_GENERATION.md](./VALIDATOR_GENERATION.md)** - Validator 自动生成
-  - 自动扫描 schema
-  - 类型映射规则
-  - 使用方法
-  - 孤立文件检测
-
-### 📊 项目总结
-- **[PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)** - 项目完整总结
-  - 功能清单
-  - 技术亮点
-  - 最佳实践
+- [**快速开始**](./QUICKSTART.md) - 项目快速上手指南
+- [**架构设计**](./ARCHITECTURE.md) - 项目架构与技术栈说明
+- [**数据库设计**](./DATABASE_SCHEMA.md) - 数据库表结构与关系
+- [**Docker 部署**](./DOCKER.md) - Docker 容器化部署指南
+- [**验证器生成**](./VALIDATOR_GENERATION.md) - 自动生成 Valibot 验证器
+- [**JWT 认证**](./AUTH.md) - JWT 身份认证完整指南
+- [**集成测试**](./TESTING.md) - Vitest 集成测试文档
+- [**项目总结**](./PROJECT_SUMMARY.md) - 项目特性与最佳实践
 
 ## 🔗 快速链接
 

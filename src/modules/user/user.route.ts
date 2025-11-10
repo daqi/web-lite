@@ -12,9 +12,14 @@ route.get('/', async (c) => {
 });
 
 route.get('/:id', async (c) => {
-  const id = Number(c.req.param('id'));
-  const user = await service.get(id);
-  return c.json(user);
+  try {
+    const id = Number(c.req.param('id'));
+    const user = await service.get(id);
+    return c.json(user);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Not found';
+    return c.json({ error: message }, 404);
+  }
 });
 
 route.post('/', vValidator('json', createUserSchema), async (c) => {

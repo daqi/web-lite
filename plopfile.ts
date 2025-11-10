@@ -26,25 +26,25 @@ export default function (plop: NodePlopAPI) {
       {
         type: 'add',
         path: 'src/modules/{{camelCase name}}/{{camelCase name}}.repository.ts',
-        templateFile: 'plop-templates/repository.hbs',
+        templateFile: 'scripts/plop-templates/repository.hbs',
       },
       // Service
       {
         type: 'add',
         path: 'src/modules/{{camelCase name}}/{{camelCase name}}.service.ts',
-        templateFile: 'plop-templates/service.hbs',
+        templateFile: 'scripts/plop-templates/service.hbs',
       },
       // Route
       {
         type: 'add',
         path: 'src/modules/{{camelCase name}}/{{camelCase name}}.route.ts',
-        templateFile: 'plop-templates/route.hbs',
+        templateFile: 'scripts/plop-templates/route.hbs',
       },
       // Index
       {
         type: 'add',
         path: 'src/modules/{{camelCase name}}/index.ts',
-        templateFile: 'plop-templates/index.hbs',
+        templateFile: 'scripts/plop-templates/index.hbs',
       },
       // 提示
       () => {

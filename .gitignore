@@ -32,5 +32,4 @@ Thumbs.db
 # Drizzle
 drizzle/
 
-# Auto-generated validators
-src/validators/*.validator.ts
+coverage/

@@ -4,6 +4,8 @@
 
 ```
 web-lite/
+├── docs/                          # 文档目录
+│
 ├── src/                           # 源代码目录
 │   ├── app.ts                    # Hono 应用主文件,路由注册和错误处理
 │   ├── index.ts                  # 服务器入口,启动 HTTP 服务
@@ -40,9 +42,7 @@ web-lite/
 ├── .env                         # 环境变量(不提交到 Git)
 ├── .env.example                 # 环境变量示例
 ├── .gitignore                   # Git 忽略文件
-├── README.md                    # 项目说明文档
-├── QUICKSTART.md               # 快速开始指南
-└── API_TESTS.md                # API 测试示例
+└── README.md                    # 项目说明文档
 ```
 
 ## 分层架构
@@ -172,24 +172,24 @@ route.post('/', valibot('json', createUsersSchema), async (c) => {
 1. HTTP Request
    POST /user
    Body: { "name": "张三", "email": "zhangsan@example.com" }
-   
+
 2. Route Layer (user.route.ts)
    ↓ valibot 校验请求体
    ↓ 校验通过
    ↓ 调用 service.create(body)
-   
+
 3. Service Layer (user.service.ts)
    ↓ 执行业务逻辑(如检查邮箱是否重复)
    ↓ 调用 repository.create(data)
-   
+
 4. Repository Layer (user.repository.ts)
    ↓ 使用 Drizzle ORM
    ↓ db.insert(user).values(data).returning()
-   
+
 5. Database
    ↓ 插入数据
    ↓ 返回插入的记录
-   
+
 6. 原路返回
    Repository → Service → Route → HTTP Response
 ```
@@ -367,10 +367,10 @@ pnpm drizzle-kit migrate
 
 这个项目架构提供了:
 
-✅ **清晰的分层** - 易于理解和维护  
-✅ **类型安全** - 端到端类型检查  
-✅ **自动化** - 减少重复劳动  
-✅ **可扩展** - 容易添加新功能  
-✅ **规范统一** - 所有模块遵循相同模式  
+✅ **清晰的分层** - 易于理解和维护
+✅ **类型安全** - 端到端类型检查
+✅ **自动化** - 减少重复劳动
+✅ **可扩展** - 容易添加新功能
+✅ **规范统一** - 所有模块遵循相同模式
 
 适合用于快速开发中小型 Web API 项目!

@@ -12,9 +12,14 @@ route.get('/', async (c) => {
 });
 
 route.get('/:id', async (c) => {
-  const id = Number(c.req.param('id'));
-  const item = await service.get(id);
-  return c.json(item);
+  try {
+    const id = Number(c.req.param('id'));
+    const item = await service.get(id);
+    return c.json(item);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Not found';
+    return c.json({ error: message }, 404);
+  }
 });
 
 route.post('/', vValidator('json', createOrderSchema), async (c) => {
