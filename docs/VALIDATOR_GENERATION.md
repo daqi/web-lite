@@ -25,11 +25,11 @@ pnpm run generate:validators
 
 ```bash
 # 1. 创建新的 schema 文件
-touch src/db/schema/categories.ts
+touch src/db/schema/categorie.ts
 
 # 2. 定义表结构
-# src/db/schema/categories.ts
-export const categories = pgTable('categories', {
+# src/db/schema/categorie.ts
+export const categorie = pgTable('categorie', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 50 }).notNull(),
   description: text('description'),
@@ -46,7 +46,7 @@ pnpm run generate:validators
 ```
 🔍 Scanning schema directory...
 
-📦 Loaded table: categories from categories.ts
+📦 Loaded table: categories from categorie.ts
 📦 Loaded table: order from order.ts
 📦 Loaded table: product from product.ts
 📦 Loaded table: user from user.ts
@@ -55,7 +55,7 @@ pnpm run generate:validators
 
 🔨 Generating validators...
 
-✅ Validator generated: categories
+✅ Validator generated: categorie
 ✅ Validator generated: order
 ✅ Validator generated: product
 ✅ Validator generated: user
@@ -172,10 +172,4 @@ function mapDrizzleTypeToValibot(col: any): string {
 2. **使用类型安全** - 利用生成的 TypeScript 类型定义
 3. **及时清理孤立文件** - 删除不再使用的 validator 文件
 4. **版本控制** - 将生成的 validator 文件提交到 Git,便于代码审查
-5. **CI/CD 集成** - 在部署前自动验证 validators 是否最新
 
-```bash
-# CI/CD 示例
-pnpm run generate:validators
-git diff --exit-code src/validators/  # 检查是否有未提交的更改
-```
