@@ -6,6 +6,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import pluralize from 'pluralize';
 import { camelCase, snakeCase } from 'change-case';
 
 interface RouteInfo {
@@ -40,7 +41,7 @@ export function scanRoutes(modulesDir: string): RouteInfo[] {
         if (fs.existsSync(routeFilePath)) {
           routes.push({
             moduleName,
-            routePath: `/${snakeCase(moduleName)}`,
+            routePath: `/${pluralize(snakeCase(moduleName))}`, // RESTful 风格使用复数
             importName: `${camelCase(moduleName)}Route`,
             filePath: `./modules/${moduleName}`,
           });

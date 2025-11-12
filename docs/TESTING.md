@@ -95,7 +95,7 @@ import app from "../../src/app";
 
 describe("API 测试", () => {
   it("应该返回用户列表", async () => {
-    const response = await app.request("/user", {
+    const response = await app.request("/users", {
       method: "GET",
     });
 
@@ -105,18 +105,18 @@ describe("API 测试", () => {
   });
 
   it("应该创建新用户", async () => {
-    const response = await app.request("/user", {
+    const response = await app.request("/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: "Alice",
+        username: "Alice",
         email: "alice@example.com",
       }),
     });
 
     expect(response.status).toBe(201);
     const data = await response.json();
-    expect(data.name).toBe("Alice");
+    expect(data.username).toBe("Alice");
   });
 });
 ```

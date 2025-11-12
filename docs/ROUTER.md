@@ -54,10 +54,10 @@ import { authRoute } from './modules/auth';
 import { productRoute } from './modules/product';
 import { userRoute } from './modules/user';
 
-// 注册路由
-router.route('/auth', authRoute);
-router.route('/product', productRoute);
-router.route('/user', userRoute);
+// 注册路由（RESTful 风格使用复数名词）
+router.route('/auths', authRoute);
+router.route('/products', productRoute);
+router.route('/users', userRoute);
 // ========== AUTO-REGISTER END ==========
 
 export default router;
@@ -193,10 +193,10 @@ app.route('/api/v2', routerV2);
 // 为所有自动生成的路由添加前缀
 app.route('/api', router);
 
-// 结果：
-// /api/auth
-// /api/product
-// /api/user
+// 结果（RESTful 风格使用复数）：
+// /api/auths
+// /api/products
+// /api/users
 ```
 
 ### 2. 中间件应用
@@ -260,7 +260,7 @@ app.route('/admin', adminRoute);
 ```typescript
 // 不要在 AUTO-REGISTER 区域内手动添加代码
 // ========== AUTO-REGISTER START ==========
-router.route('/product', productRoute);
+router.route('/products', productRoute);
 router.route('/custom', customRoute);  // ❌ 会被覆盖
 // ========== AUTO-REGISTER END ==========
 

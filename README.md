@@ -140,17 +140,19 @@ pnpm run db:push
 
 ### 用户 (Users)
 
-- `GET /user` - 获取所有用户
-- `GET /user/:id` - 获取单个用户
-- `POST /user` - 创建用户
+- `GET /users` - 获取所有用户
+- `GET /users/:id` - 获取单个用户
+- `POST /users` - 创建用户
   ```json
   {
-    "name": "张三",
+    "username": "zhangsan",
     "email": "zhangsan@example.com"
   }
   ```
-- `PUT /user/:id` - 更新用户
-- `DELETE /user/:id` - 删除用户
+- `PUT /users/:id` - 更新用户
+- `DELETE /users/:id` - 删除用户
+
+> 📌 **注意**：API 路径遵循 RESTful 规范，使用复数名词（如 `/users` 而非 `/user`）
 
 ## 📁 项目结构
 
