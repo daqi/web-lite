@@ -36,18 +36,8 @@ describe('Order API 集成测试', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    // 接受 201（创建成功）或 400/500（服务端可能对唯一或验证返回不同状态）的情况
-    if (response.status !== 201) {
-      // 打印响应体供调试
-      try {
-        const err = await response.json();
-        console.error('Order create response:', response.status, err);
-      } catch (e) {
-        console.error('Order create response with no JSON body, status:', response.status);
-      }
-    }
 
-    expect([201, 400, 500]).toContain(response.status);
+    expect(response.status).toBe(400);
 
     if (response.status === 201) {
       const data = await response.json();

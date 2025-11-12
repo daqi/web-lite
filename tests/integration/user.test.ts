@@ -46,7 +46,7 @@ describe('User API 集成测试', () => {
         body: JSON.stringify(validUser),
       });
 
-      expect([400, 500]).toContain(response.status);
+      expect(response.status).toBe(500);
     });
 
     it('应该拒绝重复的邮箱', async () => {
@@ -60,7 +60,7 @@ describe('User API 集成测试', () => {
         }),
       });
 
-      expect([400, 500]).toContain(response.status);
+      expect(response.status).toBe(500);
     });
 
     it('应该验证用户名格式', async () => {
@@ -119,8 +119,8 @@ describe('User API 集成测试', () => {
       expect(response.status).toBe(201);
       const data = await response.json();
       // DB may return null or undefined for optional fields, accept both
-      expect([null, undefined]).toContain(data.website);
-      expect([null, undefined]).toContain(data.phone);
+      expect(data.website).toBeFalsy();
+      expect(data.phone).toBeFalsy();
     });
   });
 
@@ -176,7 +176,7 @@ describe('User API 集成测试', () => {
         method: 'GET',
       });
 
-      expect([400, 500]).toContain(response.status);
+      expect(response.status).toBe(400);
     });
   });
 
@@ -226,7 +226,7 @@ describe('User API 集成测试', () => {
         }),
       });
 
-      expect([400, 500]).toContain(response.status);
+      expect(response.status).toBe(500);
     });
 
     it('应该对不存在的用户返回 404', async () => {

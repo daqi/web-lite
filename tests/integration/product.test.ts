@@ -65,7 +65,7 @@ describe('Product API 集成测试', () => {
         body: JSON.stringify({ ...validProduct, categoryId }),
       });
 
-      expect([400, 500]).toContain(response.status);
+      expect(response.status).toBe(500);
     });
   });
 

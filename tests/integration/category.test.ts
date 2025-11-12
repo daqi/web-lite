@@ -36,7 +36,7 @@ describe('Category API 集成测试', () => {
       }),
     });
 
-    expect([400, 500]).toContain(response.status);
+    expect(response.status).toBe(400);
   });
 
   it('GET /categories 返回列表', async () => {
