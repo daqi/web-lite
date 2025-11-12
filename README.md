@@ -152,7 +152,7 @@ pnpm run db:push
 - `PUT /user/:id` - 更新用户
 - `DELETE /user/:id` - 删除用户
 
-## � 项目结构
+## 📁 项目结构
 
 ```
 web-lite/

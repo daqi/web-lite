@@ -15,14 +15,14 @@ import { user } from './user';
 /**
  * 订单管理
  */
-export const order = pgTable('orders', {
+export const order = pgTable('order', {
   id: serial('id').primaryKey(),
-  orderNo: varchar('orderNo', { length: 50 }).notNull().unique(), // 订单号（格式: ORD-12345678）
+  orderNo: varchar('order_no', { length: 50 }).notNull().unique(), // 订单号（格式: ORD-12345678）
   status: varchar('status', { length: 20 }).notNull().default('pending'), // 订单状态
-  totalAmount: decimal('totalAmount', { precision: 12, scale: 2 }).notNull(), // 订单总金额
-  userId: integer('userId').notNull(), // 用户ID
-  createdAt: timestamp('createdAt').notNull().defaultNow(), // 创建时间
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(), // 更新时间
+  totalAmount: decimal('total_amount', { precision: 12, scale: 2 }).notNull(), // 订单总金额
+  userId: integer('user_id').notNull(), // 用户ID
+  createdAt: timestamp('created_at').notNull().defaultNow(), // 创建时间
+  updatedAt: timestamp('updated_at').notNull().defaultNow(), // 更新时间
 });
 
 export type Order = typeof order.$inferSelect;

@@ -43,7 +43,7 @@
       "type": "integer",
       "required": true,
       "reference": {
-        "table": "users",
+        "table": "user",
         "field": "id"
       },
       "description": "用户ID"

@@ -1,6 +1,5 @@
 {
   "name": "Category",
-  "tableName": "categories",
   "description": "商品分类",
   "fields": [
     {
@@ -37,7 +36,7 @@
       "name": "parentId",
       "type": "integer",
       "reference": {
-        "table": "categories",
+        "table": "category",
         "field": "id",
         "onDelete": "set null"
       },

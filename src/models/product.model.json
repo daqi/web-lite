@@ -1,6 +1,5 @@
 {
   "name": "Product",
-  "tableName": "products",
   "description": "商品管理",
   "fields": [
     {
@@ -51,7 +50,7 @@
       "type": "integer",
       "required": true,
       "reference": {
-        "table": "categories",
+        "table": "category",
         "field": "id",
         "onDelete": "cascade"
       },

@@ -12,51 +12,46 @@ import { pascalCase, camelCase, snakeCase } from 'change-case';
  * 字段类型映射到 Drizzle 类型
  */
 const fieldTypeToDrizzle = (field: FieldDefinition): string => {
-  const {
-    type,
-    required,
-    unique,
-    default: defaultValue,
-    primaryKey,
-    autoIncrement,
-    validation,
-  } = field;
+  const { type, required, unique, default: defaultValue, primaryKey, autoIncrement } = field;
+
+  // 将字段名转换为 snake_case（数据库列名）
+  const dbFieldName = snakeCase(field.name);
 
   let drizzleType = '';
 
   switch (type) {
     case 'string':
       const length = field.length || 255;
-      drizzleType = `varchar('${field.name}', { length: ${length} })`;
+      drizzleType = `varchar('${dbFieldName}', { length: ${length} })`;
       break;
     case 'text':
-      drizzleType = `text('${field.name}')`;
+      drizzleType = `text('${dbFieldName}')`;
       break;
     case 'integer':
-      drizzleType = `integer('${field.name}')`;
+      drizzleType = `integer('${dbFieldName}')`;
       break;
     case 'boolean':
-      drizzleType = `boolean('${field.name}')`;
+      drizzleType = `boolean('${dbFieldName}')`;
       break;
     case 'timestamp':
-      drizzleType = `timestamp('${field.name}')`;
+      drizzleType = `timestamp('${dbFieldName}')`;
       break;
     case 'decimal':
       const precision = field.precision || 10;
       const scale = field.scale || 2;
-      drizzleType = `decimal('${field.name}', { precision: ${precision}, scale: ${scale} })`;
+      drizzleType = `decimal('${dbFieldName}', { precision: ${precision}, scale: ${scale} })`;
       break;
     case 'json':
-      drizzleType = `jsonb('${field.name}')`;
+      drizzleType = `jsonb('${dbFieldName}')`;
       break;
     case 'uuid':
-      drizzleType = `uuid('${field.name}')`;
+      drizzleType = `uuid('${dbFieldName}')`;
       break;
     case 'email':
-      drizzleType = `varchar('${field.name}', { length: 255 })`;
+      drizzleType = `varchar('${dbFieldName}', { length: 255 })`;
       break;
     default:
-      drizzleType = `varchar('${field.name}', { length: 255 })`;
+      drizzleType = `varchar('${dbFieldName}', { length: 255 })`;
   }
 
   // 添加修饰符
@@ -68,7 +63,7 @@ const fieldTypeToDrizzle = (field: FieldDefinition): string => {
 
   if (autoIncrement && type === 'integer') {
     // PostgreSQL 使用 serial
-    return `serial('${field.name}').primaryKey()`;
+    return `serial('${dbFieldName}').primaryKey()`;
   }
 
   if (required && !primaryKey) {
@@ -96,7 +91,7 @@ const fieldTypeToDrizzle = (field: FieldDefinition): string => {
  * 生成 Drizzle Schema
  */
 export const generateSchema = (model: ModelDefinition): string => {
-  const tableName = model.tableName || pluralize(snakeCase(model.name));
+  const tableName = model.tableName || pluralize.singular(snakeCase(model.name));
   const modelName = camelCase(model.name);
 
   // 添加时间戳字段
