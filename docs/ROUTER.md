@@ -268,6 +268,31 @@ router.route('/custom', customRoute);  // ❌ 会被覆盖
 // ❌ 这会导致下次生成时无法找到插入位置
 ```
 
+## 📋 路由命名规则
+
+### RESTful 风格
+
+路由路径遵循 RESTful API 规范，使用**复数名词**：
+
+- ✅ `/users` - 用户资源（复数）
+- ✅ `/products` - 商品资源（复数）
+- ✅ `/categories` - 分类资源（复数）
+- ✅ `/orders` - 订单资源（复数）
+
+### 特殊模块例外
+
+某些功能性模块保持单数形式：
+
+- ✅ `/auth` - 认证模块（单数，不是资源集合）
+- ✅ `/config` - 配置模块（如果有）
+- ✅ `/search` - 搜索模块（如果有）
+
+**配置位置**：`scripts/route-register.ts` 中的 `specialModules` 数组
+
+```typescript
+const specialModules = ['auth'];  // 添加需要保持单数的模块
+```
+
 ## 🎉 总结
 
 `router.ts` 的核心价值：

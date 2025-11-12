@@ -17,7 +17,7 @@ import { productRoute } from './modules/product';
 import { userRoute } from './modules/user';
 
 // 注册路由
-router.route('/auths', authRoute);
+router.route('/auth', authRoute);
 router.route('/categories', categoryRoute);
 router.route('/orders', orderRoute);
 router.route('/products', productRoute);

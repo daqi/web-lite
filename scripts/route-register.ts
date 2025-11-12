@@ -39,9 +39,15 @@ export function scanRoutes(modulesDir: string): RouteInfo[] {
         const routeFilePath = path.join(modulePath, routeFile);
 
         if (fs.existsSync(routeFilePath)) {
+          // 特殊规则：auth 等模块不需要转复数
+          const specialModules = ['auth'];
+          const routePath = specialModules.includes(moduleName)
+            ? `/${snakeCase(moduleName)}`
+            : `/${pluralize(snakeCase(moduleName))}`;
+
           routes.push({
             moduleName,
-            routePath: `/${pluralize(snakeCase(moduleName))}`, // RESTful 风格使用复数
+            routePath, // RESTful 风格使用复数，但特殊模块除外
             importName: `${camelCase(moduleName)}Route`,
             filePath: `./modules/${moduleName}`,
           });
