@@ -16,6 +16,9 @@ interface RouteInfo {
   filePath: string;
 }
 
+// 特殊规则：auth 等模块不需要转复数
+const SPECIAL_MODULE = ['auth', 'config', 'search'];
+
 /**
  * 扫描 modules 目录，找到所有路由
  */
@@ -39,9 +42,7 @@ export function scanRoutes(modulesDir: string): RouteInfo[] {
         const routeFilePath = path.join(modulePath, routeFile);
 
         if (fs.existsSync(routeFilePath)) {
-          // 特殊规则：auth 等模块不需要转复数
-          const specialModules = ['auth'];
-          const routePath = specialModules.includes(moduleName)
+          const routePath = SPECIAL_MODULE.includes(moduleName)
             ? `/${snakeCase(moduleName)}`
             : `/${pluralize(snakeCase(moduleName))}`;
 

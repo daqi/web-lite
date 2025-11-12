@@ -229,7 +229,7 @@ GET /users?page=2&pageSize=20&sort=createdAt,desc&status=active
 | 注册       | `/auth/register`                                 |
 | 订单操作     | `/orders`, `/orders/{id}`, `/orders/{id}/cancel` |
 | 文件上传     | `/files` (POST 上传)                               |
-| 系统配置     | `/configs`, `/configs/{key}`                     |
+| 系统配置     | `/config`, `/config/{key}`                     |
 
 ---
 
