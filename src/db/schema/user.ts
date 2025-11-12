@@ -1,8 +1,28 @@
-import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  varchar,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  decimal,
+  jsonb,
+} from 'drizzle-orm/pg-core';
 
-export const user = pgTable('user', {
+/**
+ * 用户管理
+ */
+export const user = pgTable('users', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 50 }).notNull(),
-  email: varchar('email', { length: 100 }).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  username: varchar('username', { length: 50 }).notNull().unique(), // 用户名（3-20位字母数字下划线）
+  email: varchar('email', { length: 100 }).notNull().unique(), // 邮箱
+  website: varchar('website', { length: 200 }), // 个人网站
+  phone: varchar('phone', { length: 20 }), // 手机号
+  role: varchar('role', { length: 20 }).notNull().default('user'), // 角色
+  createdAt: timestamp('createdAt').notNull().defaultNow(), // 创建时间
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(), // 更新时间
 });
+
+export type User = typeof user.$inferSelect;
+export type NewUser = typeof user.$inferInsert;

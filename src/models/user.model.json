@@ -1,0 +1,63 @@
+{
+  "name": "User",
+  "description": "用户管理",
+  "fields": [
+    {
+      "name": "id",
+      "type": "integer",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "length": 50,
+      "required": true,
+      "unique": true,
+      "validation": {
+        "regex": "^[a-zA-Z0-9_]{3,20}$"
+      },
+      "description": "用户名（3-20位字母数字下划线）"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "length": 100,
+      "required": true,
+      "unique": true,
+      "validation": {
+        "email": true
+      },
+      "description": "邮箱"
+    },
+    {
+      "name": "website",
+      "type": "string",
+      "length": 200,
+      "validation": {
+        "url": true
+      },
+      "description": "个人网站"
+    },
+    {
+      "name": "phone",
+      "type": "string",
+      "length": 20,
+      "validation": {
+        "regex": "^1[3-9]\\d{9}$"
+      },
+      "description": "手机号"
+    },
+    {
+      "name": "role",
+      "type": "string",
+      "length": 20,
+      "required": true,
+      "default": "user",
+      "validation": {
+        "enum": ["user", "admin", "moderator"]
+      },
+      "description": "角色"
+    }
+  ]
+}

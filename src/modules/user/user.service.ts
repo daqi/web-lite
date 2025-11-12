@@ -1,30 +1,34 @@
 import { UserRepository } from './user.repository';
-import type { CreateUserInput, UpdateUserInput } from '../../validators/user.validator';
+import type { User, NewUser } from '../../db/schema/user';
 
+/**
+ * 用户管理 Service
+ * Auto-generated from model definition
+ */
 export class UserService {
-  private repository = new UserRepository();
+  private userRepository: UserRepository;
 
-  async list() {
-    return await this.repository.findAll();
+  constructor() {
+    this.userRepository = new UserRepository();
   }
 
-  async get(id: number) {
-    const user = await this.repository.findById(id);
-    if (!user) throw new Error('User not found');
-    return user;
+  async getAll(): Promise<User[]> {
+    return this.userRepository.findAll();
   }
 
-  async create(data: CreateUserInput) {
-    return await this.repository.create(data);
+  async getById(id: number): Promise<User | undefined> {
+    return this.userRepository.findById(id);
   }
 
-  async update(id: number, data: UpdateUserInput) {
-    const user = await this.repository.update(id, data);
-    if (!user) throw new Error('User not found');
-    return user;
+  async create(data: NewUser): Promise<User> {
+    return this.userRepository.create(data);
   }
 
-  async delete(id: number) {
-    await this.repository.delete(id);
+  async update(id: number, data: Partial<NewUser>): Promise<User | undefined> {
+    return this.userRepository.update(id, data);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    return this.userRepository.delete(id);
   }
 }

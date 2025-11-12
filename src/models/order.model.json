@@ -1,0 +1,52 @@
+{
+  "name": "Order",
+  "description": "订单管理",
+  "fields": [
+    {
+      "name": "id",
+      "type": "integer",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "name": "orderNo",
+      "type": "string",
+      "length": 50,
+      "required": true,
+      "unique": true,
+      "validation": {
+        "regex": "^ORD-[0-9]{8}$"
+      },
+      "description": "订单号（格式: ORD-12345678）"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "length": 20,
+      "required": true,
+      "default": "pending",
+      "validation": {
+        "enum": ["pending", "paid", "shipped", "completed", "cancelled"]
+      },
+      "description": "订单状态"
+    },
+    {
+      "name": "totalAmount",
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "required": true,
+      "description": "订单总金额"
+    },
+    {
+      "name": "userId",
+      "type": "integer",
+      "required": true,
+      "reference": {
+        "table": "users",
+        "field": "id"
+      },
+      "description": "用户ID"
+    }
+  ]
+}

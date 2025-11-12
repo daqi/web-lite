@@ -315,8 +315,38 @@ Web Lite 使用 **JSON 格式**定义模型，提供了：
 {
   "name": "username",
   "type": "string",
-  "length": 50             // varchar(50)
+  "length": 50             // varchar(50)，默认 255
 }
+```
+
+**生成效果**：
+```typescript
+// Schema
+username: varchar('username', { length: 50 })
+```
+
+### 枚举值验证
+
+```json
+{
+  "name": "status",
+  "type": "string",
+  "validation": {
+    "enum": ["pending", "paid", "shipped", "completed", "cancelled"]
+  }
+}
+```
+
+**生成效果**：
+
+Schema (Drizzle):
+```typescript
+status: varchar('status', { length: 255 })
+```
+
+Validator (Valibot):
+```typescript
+status: v.picklist(['pending', 'paid', 'shipped', 'completed', 'cancelled'])
 ```
 
 ### 小数精度
@@ -325,10 +355,31 @@ Web Lite 使用 **JSON 格式**定义模型，提供了：
 {
   "name": "price",
   "type": "decimal",
-  "precision": 10,         // 总位数
+  "precision": 10,         // 总位数（包括整数和小数）
   "scale": 2               // 小数位数 (DECIMAL(10,2))
 }
 ```
+
+**生成效果**：
+
+Schema (Drizzle):
+```typescript
+price: decimal('price', { precision: 10, scale: 2 })
+```
+
+Validator (Valibot):
+```typescript
+price: v.pipe(v.string(), v.regex(/^\d+(\.\d{1,2})?$/))
+// scale: 2 -> 最多 2 位小数
+// scale: 3 -> 最多 3 位小数
+// scale: 4 -> 最多 4 位小数
+```
+
+**说明**：
+- `precision`: 数字总位数（整数 + 小数）
+- `scale`: 小数位数
+- decimal 在数据库中存储为 string 类型
+- validator 会根据 scale 自动生成对应的正则表达式
 
 ### 外键引用
 
@@ -353,10 +404,77 @@ Web Lite 使用 **JSON 格式**定义模型，提供了：
 
 ### 验证规则
 
+#### 长度/范围限制
+
 ```json
 {
   "name": "age",
   "type": "integer",
+  "validation": {
+    "min": 0,
+    "max": 150
+  }
+}
+```
+
+#### 正则表达式
+
+```json
+{
+  "name": "username",
+  "type": "string",
+  "validation": {
+    "regex": "^[a-zA-Z0-9_]{3,20}$"
+  }
+}
+```
+
+#### 邮箱和 URL
+
+```json
+{
+  "name": "email",
+  "type": "string",
+  "validation": {
+    "email": true
+  }
+},
+{
+  "name": "website",
+  "type": "string",
+  "validation": {
+    "url": true
+  }
+}
+```
+
+#### 枚举值
+
+```json
+{
+  "name": "status",
+  "type": "string",
+  "validation": {
+    "enum": ["active", "inactive", "pending"]
+  }
+}
+```
+
+**支持的验证类型**：
+- `min` / `max` - 最小/最大值（数字）或长度（字符串）
+- `regex` - 正则表达式验证
+- `email` - 邮箱格式验证
+- `url` - URL 格式验证
+- `enum` - 枚举值限制
+
+**验证优先级**（从高到低）：
+1. `email` - 邮箱验证
+2. `url` - URL 验证
+3. `enum` - 枚举值
+4. `regex` - 正则表达式
+5. `min/max` - 长度/范围限制
+
+**注意**：同一字段只会应用优先级最高的验证规则。
   "validation": {
     "min": 18,              // 最小值
     "max": 120              // 最大值

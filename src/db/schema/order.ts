@@ -1,14 +1,36 @@
-import { pgTable, serial, integer, varchar, decimal, timestamp } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  varchar,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  decimal,
+  jsonb,
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { user } from './user';
 
-export const order = pgTable('order', {
+/**
+ * 订单管理
+ */
+export const order = pgTable('orders', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull(),
-  productId: integer('product_id').notNull(),
-  quantity: integer('quantity').notNull().default(1),
-  totalPrice: decimal('total_price', { precision: 10, scale: 2 }).notNull().default('0'),
-  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, confirmed, shipped, delivered, cancelled
-  shippingAddress: varchar('shipping_address', { length: 255 }),
-  orderNumber: varchar('order_number', { length: 50 }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  orderNo: varchar('orderNo', { length: 50 }).notNull().unique(), // 订单号（格式: ORD-12345678）
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // 订单状态
+  totalAmount: decimal('totalAmount', { precision: 12, scale: 2 }).notNull(), // 订单总金额
+  userId: integer('userId').notNull(), // 用户ID
+  createdAt: timestamp('createdAt').notNull().defaultNow(), // 创建时间
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(), // 更新时间
 });
+
+export type Order = typeof order.$inferSelect;
+export type NewOrder = typeof order.$inferInsert;
+
+export const orderRelations = relations(order, ({ one }) => ({
+  userIdRelation: one(user, {
+    fields: [order.userId],
+    references: [user.id],
+  }),
+}));

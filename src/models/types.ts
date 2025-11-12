@@ -25,8 +25,12 @@ export type FieldType =
 export interface FieldValidation {
   min?: number;
   max?: number;
-  regex?: string;
+  regex?: string; // 正则表达式字符串
+  pattern?: string; // 已废弃，使用 regex
   custom?: string; // 自定义验证函数名
+  enum?: (string | number)[]; // 枚举值
+  email?: boolean; // 邮箱格式验证
+  url?: boolean; // URL 格式验证
 }
 
 // 字段定义
@@ -40,6 +44,11 @@ export interface FieldDefinition {
   autoIncrement?: boolean;
   validation?: FieldValidation;
   description?: string;
+  // decimal 类型专用
+  precision?: number; // 精度（总位数）
+  scale?: number; // 小数位数
+  // string 类型专用
+  length?: number; // 字符串长度
   // 关系字段
   reference?: {
     table: string;

@@ -12,13 +12,22 @@ import { pascalCase, camelCase, snakeCase } from 'change-case';
  * 字段类型映射到 Drizzle 类型
  */
 const fieldTypeToDrizzle = (field: FieldDefinition): string => {
-  const { type, required, unique, default: defaultValue, primaryKey, autoIncrement } = field;
+  const {
+    type,
+    required,
+    unique,
+    default: defaultValue,
+    primaryKey,
+    autoIncrement,
+    validation,
+  } = field;
 
   let drizzleType = '';
 
   switch (type) {
     case 'string':
-      drizzleType = `varchar('${field.name}', { length: 255 })`;
+      const length = field.length || 255;
+      drizzleType = `varchar('${field.name}', { length: ${length} })`;
       break;
     case 'text':
       drizzleType = `text('${field.name}')`;
@@ -33,7 +42,9 @@ const fieldTypeToDrizzle = (field: FieldDefinition): string => {
       drizzleType = `timestamp('${field.name}')`;
       break;
     case 'decimal':
-      drizzleType = `decimal('${field.name}', { precision: 10, scale: 2 })`;
+      const precision = field.precision || 10;
+      const scale = field.scale || 2;
+      drizzleType = `decimal('${field.name}', { precision: ${precision}, scale: ${scale} })`;
       break;
     case 'json':
       drizzleType = `jsonb('${field.name}')`;
@@ -208,10 +219,29 @@ const fieldTypeToValibot = (field: FieldDefinition): string => {
     case 'text':
     case 'email':
       valibotType = 'v.string()';
-      if (type === 'email') {
+
+      // email 类型或 email 验证
+      if (type === 'email' || validation?.email) {
         valibotType = 'v.pipe(v.string(), v.email())';
       }
-      if (validation?.min !== undefined || validation?.max !== undefined) {
+      // url 验证
+      else if (validation?.url) {
+        valibotType = 'v.pipe(v.string(), v.url())';
+      }
+      // enum 验证（优先级高）
+      else if (validation?.enum && validation.enum.length > 0) {
+        const enumValues = validation.enum
+          .map((v) => (typeof v === 'string' ? `'${v}'` : v))
+          .join(', ');
+        valibotType = `v.picklist([${enumValues}])`;
+      }
+      // regex 验证
+      else if (validation?.regex || validation?.pattern) {
+        const regex = validation.regex || validation.pattern;
+        valibotType = `v.pipe(v.string(), v.regex(/${regex}/))`;
+      }
+      // 长度验证
+      else if (validation?.min !== undefined || validation?.max !== undefined) {
         const constraints: string[] = [];
         if (validation.min !== undefined) {
           constraints.push(`v.minLength(${validation.min})`);
@@ -242,7 +272,10 @@ const fieldTypeToValibot = (field: FieldDefinition): string => {
       valibotType = 'v.pipe(v.string(), v.isoTimestamp())';
       break;
     case 'decimal':
-      valibotType = 'v.number()';
+      // decimal 在数据库中存储为 string，需要验证数字格式
+      // 根据 scale 生成对应的正则表达式
+      const scale = field.scale || 2;
+      valibotType = `v.pipe(v.string(), v.regex(/^\\d+(\\.\\d{1,${scale}})?$/))`;
       break;
     case 'json':
       valibotType = 'v.any()';

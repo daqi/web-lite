@@ -2,7 +2,7 @@ import { ProductRepository } from './product.repository';
 import type { Product, NewProduct } from '../../db/schema/product';
 
 /**
- * 商品管理模型 Service
+ * 商品管理 Service
  * Auto-generated from model definition
  */
 export class ProductService {

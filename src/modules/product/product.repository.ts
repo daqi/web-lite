@@ -3,7 +3,7 @@ import { product, type Product, type NewProduct } from '../../db/schema/product'
 import { eq } from 'drizzle-orm';
 
 /**
- * 商品管理模型 Repository
+ * 商品管理 Repository
  * Auto-generated from model definition
  */
 export class ProductRepository {
@@ -31,12 +31,8 @@ export class ProductRepository {
   }
 
   async delete(id: number): Promise<boolean> {
-    // 软删除
-    const result = await db
-      .update(product)
-      .set({ deletedAt: new Date() })
-      .where(eq(product.id, id))
-      .returning();
+    // 硬删除
+    const result = await db.delete(product).where(eq(product.id, id)).returning();
     return result.length > 0;
   }
 }

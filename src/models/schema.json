@@ -194,11 +194,15 @@
             },
             "max": {
               "type": "number",
-              "description": "最大值/最大长度"
+              "description": "最大值/最小长度"
+            },
+            "regex": {
+              "type": "string",
+              "description": "正则表达式（用于 check 约束）"
             },
             "pattern": {
               "type": "string",
-              "description": "正则表达式"
+              "description": "正则表达式（已废弃，请使用 regex）"
             },
             "email": {
               "type": "boolean",

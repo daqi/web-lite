@@ -1,30 +1,34 @@
 import { OrderRepository } from './order.repository';
-import type { CreateOrderInput, UpdateOrderInput } from '../../validators/order.validator';
+import type { Order, NewOrder } from '../../db/schema/order';
 
+/**
+ * 订单管理 Service
+ * Auto-generated from model definition
+ */
 export class OrderService {
-  private repository = new OrderRepository();
+  private orderRepository: OrderRepository;
 
-  async list() {
-    return await this.repository.findAll();
+  constructor() {
+    this.orderRepository = new OrderRepository();
   }
 
-  async get(id: number) {
-    const item = await this.repository.findById(id);
-    if (!item) throw new Error('Order not found');
-    return item;
+  async getAll(): Promise<Order[]> {
+    return this.orderRepository.findAll();
   }
 
-  async create(data: CreateOrderInput) {
-    return await this.repository.create(data);
+  async getById(id: number): Promise<Order | undefined> {
+    return this.orderRepository.findById(id);
   }
 
-  async update(id: number, data: UpdateOrderInput) {
-    const item = await this.repository.update(id, data);
-    if (!item) throw new Error('Order not found');
-    return item;
+  async create(data: NewOrder): Promise<Order> {
+    return this.orderRepository.create(data);
   }
 
-  async delete(id: number) {
-    await this.repository.delete(id);
+  async update(id: number, data: Partial<NewOrder>): Promise<Order | undefined> {
+    return this.orderRepository.update(id, data);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    return this.orderRepository.delete(id);
   }
 }

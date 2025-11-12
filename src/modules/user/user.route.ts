@@ -3,42 +3,61 @@ import { vValidator } from '@hono/valibot-validator';
 import { UserService } from './user.service';
 import { createUserSchema, updateUserSchema } from '../../validators/user.validator';
 
-const service = new UserService();
-const route = new Hono();
+/**
+ * 用户管理 Routes
+ * Auto-generated from model definition
+ */
+const app = new Hono();
+const userService = new UserService();
 
-route.get('/', async (c) => {
-  const user = await service.list();
-  return c.json(user);
+// 获取所有用户管理
+app.get('/', async (c) => {
+  const items = await userService.getAll();
+  return c.json(items);
 });
 
-route.get('/:id', async (c) => {
-  try {
-    const id = Number(c.req.param('id'));
-    const user = await service.get(id);
-    return c.json(user);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Not found';
-    return c.json({ error: message }, 404);
+// 获取单个用户管理
+app.get('/:id', async (c) => {
+  const id = Number(c.req.param('id'));
+  const item = await userService.getById(id);
+
+  if (!item) {
+    return c.json({ error: 'User not found' }, 404);
   }
+
+  return c.json(item);
 });
 
-route.post('/', vValidator('json', createUserSchema), async (c) => {
-  const body = c.req.valid('json');
-  const user = await service.create(body);
-  return c.json(user, 201);
+// 创建用户管理
+app.post('/', vValidator('json', createUserSchema), async (c) => {
+  const data = c.req.valid('json');
+  const item = await userService.create(data);
+  return c.json(item, 201);
 });
 
-route.put('/:id', vValidator('json', updateUserSchema), async (c) => {
+// 更新用户管理
+app.put('/:id', vValidator('json', updateUserSchema), async (c) => {
   const id = Number(c.req.param('id'));
-  const body = c.req.valid('json');
-  const user = await service.update(id, body);
-  return c.json(user);
+  const data = c.req.valid('json');
+  const item = await userService.update(id, data);
+
+  if (!item) {
+    return c.json({ error: 'User not found' }, 404);
+  }
+
+  return c.json(item);
 });
 
-route.delete('/:id', async (c) => {
+// 删除用户管理
+app.delete('/:id', async (c) => {
   const id = Number(c.req.param('id'));
-  await service.delete(id);
-  return c.json({ success: true });
+  const success = await userService.delete(id);
+
+  if (!success) {
+    return c.json({ error: 'User not found' }, 404);
+  }
+
+  return c.json({ message: 'User deleted successfully' });
 });
 
-export default route;
+export const userRoute = app;

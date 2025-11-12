@@ -3,42 +3,61 @@ import { vValidator } from '@hono/valibot-validator';
 import { OrderService } from './order.service';
 import { createOrderSchema, updateOrderSchema } from '../../validators/order.validator';
 
-const service = new OrderService();
-const route = new Hono();
+/**
+ * 订单管理 Routes
+ * Auto-generated from model definition
+ */
+const app = new Hono();
+const orderService = new OrderService();
 
-route.get('/', async (c) => {
-  const items = await service.list();
+// 获取所有订单管理
+app.get('/', async (c) => {
+  const items = await orderService.getAll();
   return c.json(items);
 });
 
-route.get('/:id', async (c) => {
-  try {
-    const id = Number(c.req.param('id'));
-    const item = await service.get(id);
-    return c.json(item);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Not found';
-    return c.json({ error: message }, 404);
-  }
-});
-
-route.post('/', vValidator('json', createOrderSchema), async (c) => {
-  const body = c.req.valid('json');
-  const item = await service.create(body);
-  return c.json(item, 201);
-});
-
-route.put('/:id', vValidator('json', updateOrderSchema), async (c) => {
+// 获取单个订单管理
+app.get('/:id', async (c) => {
   const id = Number(c.req.param('id'));
-  const body = c.req.valid('json');
-  const item = await service.update(id, body);
+  const item = await orderService.getById(id);
+
+  if (!item) {
+    return c.json({ error: 'Order not found' }, 404);
+  }
+
   return c.json(item);
 });
 
-route.delete('/:id', async (c) => {
-  const id = Number(c.req.param('id'));
-  await service.delete(id);
-  return c.json({ success: true });
+// 创建订单管理
+app.post('/', vValidator('json', createOrderSchema), async (c) => {
+  const data = c.req.valid('json');
+  const item = await orderService.create(data);
+  return c.json(item, 201);
 });
 
-export default route;
+// 更新订单管理
+app.put('/:id', vValidator('json', updateOrderSchema), async (c) => {
+  const id = Number(c.req.param('id'));
+  const data = c.req.valid('json');
+  const item = await orderService.update(id, data);
+
+  if (!item) {
+    return c.json({ error: 'Order not found' }, 404);
+  }
+
+  return c.json(item);
+});
+
+// 删除订单管理
+app.delete('/:id', async (c) => {
+  const id = Number(c.req.param('id'));
+  const success = await orderService.delete(id);
+
+  if (!success) {
+    return c.json({ error: 'Order not found' }, 404);
+  }
+
+  return c.json({ message: 'Order deleted successfully' });
+});
+
+export const orderRoute = app;
