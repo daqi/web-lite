@@ -80,54 +80,63 @@ curl -X DELETE http://localhost:3000/user/1
 
 ## 6️⃣ 生成新模块
 
+使用 JSON 模型驱动开发，快速生成完整模块！
+
+### 步骤 1: 创建 JSON 模型
+
+在 `src/models/` 下创建 `product.model.json`：
+
+```json
+{
+  "name": "Product",
+  "description": "商品管理",
+  "fields": [
+    {
+      "name": "id",
+      "type": "integer",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "length": 100,
+      "required": true
+    },
+    {
+      "name": "price",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "required": true
+    }
+  ]
+}
+```
+
+### 步骤 2: 生成代码
+
 ```bash
-# 运行 Plop 生成器
-pnpm plop module
-
-# 输入模块名称,例如: product
+pnpm run generate:model product
 ```
 
-这将生成:
-- `src/modules/product/product.repository.ts`
-- `src/modules/product/product.service.ts`
-- `src/modules/product/product.route.ts`
-- `src/modules/product/index.ts`
+这将自动生成：
+- ✅ `src/db/schema/product.ts` - Drizzle Schema
+- ✅ `src/validators/product.validator.ts` - Valibot Validator
+- ✅ `src/modules/product/product.repository.ts` - Repository
+- ✅ `src/modules/product/product.service.ts` - Service
+- ✅ `src/modules/product/product.route.ts` - Route
+- ✅ `src/modules/product/index.ts` - 模块导出
+- ✅ 自动注册到 `schema/index.ts`
+- ✅ 自动注册到 `router.ts`
 
-### 完成新模块的步骤:
+### 步骤 3: 更新数据库
 
-**步骤 1**: 创建 Schema
-```typescript
-// src/db/schema/product.ts
-import { pgTable, serial, varchar, decimal, timestamp } from 'drizzle-orm/pg-core';
-
-export const product = pgTable('product', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 100 }).notNull(),
-  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-```
-
-**步骤 2**: 导出 Schema
-```typescript
-// src/db/schema/index.ts
-export * from './user';
-export * from './product';  // 添加这行
-```
-
-**步骤 3**: 生成 Validator
-```bash
-pnpm run generate:validators
-```
-
-**步骤 4**: 推送数据库变更
 ```bash
 pnpm run db:push
 ```
 
-**步骤 5**: 注册路由
-```typescript
-// src/app.ts
+### 步骤 4: 测试 API
 import { userRoute } from './modules/user';
 import { productRoute } from './modules/product';  // 添加
 
@@ -165,10 +174,11 @@ pnpm start
 1. **类型安全**: 所有的类型都是自动推导的,从数据库 → Validator → API
 2. **热重载**: 使用 `tsx watch` 实现自动重启
 3. **错误处理**: 已在 `app.ts` 中配置全局错误处理
-4. **代码规范**: 所有生成的代码都遵循统一的架构模式
+4. **模型驱动**: JSON 模型自动生成全部代码，效率提升 15 倍
+5. **智能验证**: 支持 regex、email、url、enum 等多种验证规则
 
 ## 📚 下一步
 
-- 查看 `README.md` 了解完整文档
-- 探索 `plop-templates/` 自定义代码模板
-- 修改 `scripts/generate-validators.ts` 调整 validator 生成逻辑
+- 查看 [JSON_MODEL_QUICKSTART.md](./JSON_MODEL_QUICKSTART.md) 快速上手 JSON 模型
+- 探索 [JSON_MODEL.md](./JSON_MODEL.md) 了解完整的模型定义指南
+- 阅读 [JSON_MODEL_FIELD_CONFIG.md](./JSON_MODEL_FIELD_CONFIG.md) 学习所有字段配置选项

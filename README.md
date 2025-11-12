@@ -1,6 +1,6 @@
 # Web Lite
 
-一个基于 **Drizzle ORM + Hono + Valibot + Plop** 的可运行示例。
+一个基于 **Drizzle ORM + Hono + Valibot + JSON 模型驱动开发**的可运行示例。
 
 这个架构以轻量化为目标，且具备现代 TypeScript 全栈最佳实践。
 
@@ -16,10 +16,10 @@
 - 🚀 **Hono** - 轻量级 Web 框架
 - 🗄️ **Drizzle ORM** - 类型安全的 PostgreSQL ORM
 - ✅ **Valibot** - 轻量级请求校验
-- 🔧 **Plop.js** - 自动化模块代码生成
-- 🤖 **自动生成 Validator** - 从 Drizzle Schema 自动生成 Valibot 校验器
-- 🎯 **模型驱动开发** - 通过定义模型配置自动生成完整模块代码
+- 🎯 **JSON 模型驱动开发** - 通过 JSON 配置自动生成完整模块代码
+- 🤖 **智能默认值** - 自动应用最佳实践配置
 - ✨ **约定式开发** - 自动扫描模型文件，自动注册路由，零配置开发
+- 🔧 **配置式加载** - 灵活选择加载特定模型
 
 ## 📦 安装
 
@@ -63,9 +63,6 @@ pnpm run db:studio
 ## 🚀 运行
 
 ```bash
-# 生成 Validators (从 Drizzle Schema)
-pnpm run generate:validators
-
 # 开发模式
 pnpm run dev
 
@@ -74,6 +71,70 @@ pnpm start
 ```
 
 服务将运行在 `http://localhost:3000`
+
+## 🎯 快速生成新模块
+
+使用 JSON 模型驱动开发，只需创建一个 JSON 文件即可生成完整模块！
+
+### 1. 创建模型文件
+
+在 `src/models/` 下创建 `product.model.json`：
+
+```json
+{
+  "name": "Product",
+  "description": "商品管理",
+  "fields": [
+    {
+      "name": "id",
+      "type": "integer",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "validation": {
+        "min": 1,
+        "max": 200
+      }
+    },
+    {
+      "name": "price",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "required": true
+    }
+  ]
+}
+```
+
+### 2. 生成代码
+
+```bash
+pnpm run generate:model product
+```
+
+### 3. 更新数据库
+
+```bash
+pnpm run db:push
+```
+
+**就这么简单！** 自动生成：
+- ✅ Drizzle Schema (src/db/schema/product.ts)
+- ✅ Valibot Validator (src/validators/product.validator.ts)
+- ✅ Repository (src/modules/product/product.repository.ts)
+- ✅ Service (src/modules/product/product.service.ts)
+- ✅ Route (src/modules/product/product.route.ts)
+- ✅ 自动注册到 schema/index.ts 和 router.ts
+
+详细文档：
+- 📖 [JSON 模型快速开始](./docs/JSON_MODEL_QUICKSTART.md)
+- 📖 [完整 JSON 模型指南](./docs/JSON_MODEL.md)
+- 📖 [字段配置指南](./docs/JSON_MODEL_FIELD_CONFIG.md)
 
 ## 📝 API 端点
 
@@ -91,56 +152,50 @@ pnpm start
 - `PUT /user/:id` - 更新用户
 - `DELETE /user/:id` - 删除用户
 
-## 🔧 使用 Plop 生成新模块
-
-```bash
-pnpm plop module
-```
-
-按提示输入模块名称(例如: `product`, `order`),将自动生成:
-
-```
-src/modules/product/
-├── product.repository.ts   # 数据访问层
-├── product.service.ts      # 业务逻辑层
-├── product.route.ts        # 路由层
-└── index.ts                # 导出
-```
-
-### 生成模块后的步骤:
-
-1. 在 `src/db/schema/` 中创建对应的数据表定义
-2. 运行 `pnpm run generate:validators` 生成校验器
-3. 在 `src/app.ts` 中注册路由
-
-## 📁 项目结构
+## � 项目结构
 
 ```
 web-lite/
 ├── src/
 │   ├── app.ts                 # Hono App 主入口
 │   ├── index.ts               # 服务器启动
+│   ├── router.ts              # 路由自动注册
 │   ├── db/
 │   │   ├── client.ts          # Drizzle 客户端
-│   │   └── schema/
-│   │       ├── index.ts
-│   │       └── user.ts       # 用户表定义
+│   │   └── schema/            # 数据库 Schema
+│   │       ├── index.ts       # Schema 自动注册
+│   │       ├── user.ts
+│   │       ├── product.ts
+│   │       └── order.ts
+│   ├── models/                # JSON 模型定义
+│   │   ├── types.ts           # TypeScript 类型
+│   │   ├── schema.json        # JSON Schema 验证
+│   │   ├── validator.ts       # 模型验证器
+│   │   ├── loader.ts          # 模型加载器
+│   │   ├── index.ts           # 模型注册中心
+│   │   ├── user.model.json    # 用户模型
+│   │   ├── product.model.json # 商品模型
+│   │   └── order.model.json   # 订单模型
 │   ├── modules/               # 业务模块
-│   │   └── user/
-│   │       ├── index.ts
-│   │       ├── user.repository.ts
-│   │       ├── user.service.ts
-│   │       └── user.route.ts
-│   └── validators/            # 自动生成的校验器
-│       └── user.validator.ts
+│   │   ├── user/
+│   │   │   ├── index.ts
+│   │   │   ├── user.repository.ts
+│   │   │   ├── user.service.ts
+│   │   │   └── user.route.ts
+│   │   ├── product/
+│   │   └── order/
+│   └── validators/            # Valibot 校验器
+│       ├── user.validator.ts
+│       ├── product.validator.ts
+│       └── order.validator.ts
 ├── scripts/
-│   └── generate-validators.ts # 校验器生成脚本
-├── plop-templates/            # Plop 模板
-│   ├── repository.hbs
-│   ├── service.hbs
-│   ├── route.hbs
-│   └── index.hbs
-├── plopfile.ts                # Plop 配置
+│   ├── model-generator.ts        # 模型代码生成器
+│   ├── generate-from-model.ts    # CLI 工具
+│   └── route-register.ts         # 路由自动注册
+├── docs/                      # 完整文档
+│   ├── JSON_MODEL.md
+│   ├── JSON_MODEL_QUICKSTART.md
+│   └── JSON_MODEL_FIELD_CONFIG.md
 ├── package.json
 └── tsconfig.json
 ```
@@ -153,11 +208,12 @@ web-lite/
 - **ORM**: Drizzle ORM
 - **Database**: PostgreSQL
 - **Validation**: Valibot
-- **Code Generator**: Plop.js
+- **Schema Validation**: Ajv + JSON Schema
+- **Code Generator**: 自研模型驱动生成器
 
 ## 📚 开发流程
 
-### 方式 1: JSON 模型驱动开发（推荐）⭐
+### JSON 模型驱动开发（推荐）⭐
 
 1. **创建 JSON 模型定义**
    ```bash
@@ -179,45 +235,15 @@ web-lite/
 
 详细文档: [JSON 模型定义指南](./docs/JSON_MODEL.md)
 
-### 方式 2: 传统开发流程
-
-1. **创建数据表**
-   ```bash
-   # 在 src/db/schema/ 中创建新表定义
-   # 例如: product.ts
-   ```
-
-2. **生成校验器**
-   ```bash
-   pnpm run generate:validators
-   ```
-
-3. **生成模块代码**
-   ```bash
-   pnpm plop module
-   # 输入: product
-   ```
-
-4. **注册路由**
-   ```typescript
-   // src/app.ts
-   import { productRoute } from './modules/product';
-   app.route('/product', productRoute);
-   ```
-
-5. **推送数据库变更**
-   ```bash
-   pnpm run db:push
-   ```
-
 ## 🎯 核心优势
 
 1. **类型安全**: 从数据库到 API 的端到端类型安全
-2. **模型驱动**: 定义一次模型，自动生成全部代码（Schema、Validator、Repository、Service、Route）
-3. **自动化**: Schema → Validator 自动生成,减少手写代码
-3. **模块化**: 清晰的分层架构 (Repository → Service → Route)
-4. **快速开发**: Plop 模板快速生成标准化代码
-5. **轻量高效**: Hono + Valibot 性能优异
+2. **模型驱动**: 定义一次 JSON 模型，自动生成全部代码
+3. **自动化**: 自动应用默认值、自动注册路由、自动验证
+4. **模块化**: 清晰的分层架构 (Repository → Service → Route)
+5. **高效开发**: 5 分钟完成一个完整 CRUD 模块
+6. **轻量高效**: Hono + Valibot 性能优异
+7. **智能验证**: 支持 regex、email、url、enum 等多种验证
 
 ## 📚 文档
 

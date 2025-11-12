@@ -1,14 +1,12 @@
 {
   "name": "web-lite",
   "version": "1.0.0",
-  "description": "Drizzle ORM + Hono + Valibot + Plop 完整示例项目",
+  "description": "Drizzle ORM + Hono + Valibot + JSON 模型驱动开发",
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
-    "generate:validators": "tsx scripts/generate-validators.ts",
     "generate:model": "tsx scripts/generate-from-model.ts",
-    "plop": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "docker:up": "docker-compose up -d",
@@ -21,8 +19,7 @@
   "keywords": [
     "hono",
     "drizzle",
-    "valibot",
-    "plop"
+    "valibot"
   ],
   "author": "",
   "license": "MIT",
@@ -51,7 +48,6 @@
     "change-case": "^5.4.4",
     "cross-env": "^10.1.0",
     "drizzle-kit": "^0.31.6",
-    "plop": "^4.0.4",
     "pluralize": "^8.0.0",
     "prettier": "^3.6.2",
     "pretty-quick": "^4.2.2",

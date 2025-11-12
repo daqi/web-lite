@@ -13,6 +13,6 @@
     "rootDir": "./",
     "types": ["node"]
   },
-  "include": ["src/**/*", "scripts/**/*", "plopfile.ts"],
+  "include": ["src/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist"]
 }

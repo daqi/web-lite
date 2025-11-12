@@ -1,5 +1,8 @@
 ## 📦 项目创建完成!
 
+> ⚠️ **已废弃**：本文档基于 Plop 代码生成器的旧架构。  
+> 📖 **最新文档**：请查看 [JSON_MODEL_QUICKSTART.md](./JSON_MODEL_QUICKSTART.md) 了解最新的开发流程。
+
 ### ✅ 已创建的文件
 
 #### 📝 配置文件
