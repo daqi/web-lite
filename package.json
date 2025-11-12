@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "generate:validators": "tsx scripts/generate-validators.ts",
+    "generate:model": "tsx scripts/generate-from-model.ts",
     "plop": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=plopfile.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
@@ -28,6 +29,8 @@
   "dependencies": {
     "@hono/node-server": "^1.19.6",
     "@hono/valibot-validator": "^0.5.3",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",

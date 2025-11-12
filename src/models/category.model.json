@@ -1,0 +1,72 @@
+{
+  "name": "Category",
+  "tableName": "categories",
+  "description": "商品分类",
+  "fields": [
+    {
+      "name": "id",
+      "type": "integer",
+      "primaryKey": true,
+      "autoIncrement": true,
+      "description": "分类ID"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "validation": {
+        "min": 1,
+        "max": 100
+      },
+      "description": "分类名称"
+    },
+    {
+      "name": "slug",
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "分类标识符"
+    },
+    {
+      "name": "description",
+      "type": "text",
+      "description": "分类描述"
+    },
+    {
+      "name": "parentId",
+      "type": "integer",
+      "reference": {
+        "table": "categories",
+        "field": "id",
+        "onDelete": "set null"
+      },
+      "description": "父分类ID（支持多级分类）"
+    },
+    {
+      "name": "order",
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "description": "排序顺序"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_category_slug",
+      "fields": ["slug"],
+      "unique": true
+    },
+    {
+      "name": "idx_category_parent",
+      "fields": ["parentId"]
+    }
+  ],
+  "api": {
+    "list": { "enabled": true, "auth": false },
+    "get": { "enabled": true, "auth": false },
+    "create": { "enabled": true, "auth": true, "roles": ["admin"] },
+    "update": { "enabled": true, "auth": true, "roles": ["admin"] },
+    "delete": { "enabled": true, "auth": true, "roles": ["admin"] }
+  }
+}

@@ -1,30 +1,34 @@
 import { ProductRepository } from './product.repository';
-import type { CreateProductInput, UpdateProductInput } from '../../validators/product.validator';
+import type { Product, NewProduct } from '../../db/schema/product';
 
+/**
+ * 商品管理模型 Service
+ * Auto-generated from model definition
+ */
 export class ProductService {
-  private repository = new ProductRepository();
+  private productRepository: ProductRepository;
 
-  async list() {
-    return await this.repository.findAll();
+  constructor() {
+    this.productRepository = new ProductRepository();
   }
 
-  async get(id: number) {
-    const item = await this.repository.findById(id);
-    if (!item) throw new Error('Product not found');
-    return item;
+  async getAll(): Promise<Product[]> {
+    return this.productRepository.findAll();
   }
 
-  async create(data: CreateProductInput) {
-    return await this.repository.create(data);
+  async getById(id: number): Promise<Product | undefined> {
+    return this.productRepository.findById(id);
   }
 
-  async update(id: number, data: UpdateProductInput) {
-    const item = await this.repository.update(id, data);
-    if (!item) throw new Error('Product not found');
-    return item;
+  async create(data: NewProduct): Promise<Product> {
+    return this.productRepository.create(data);
   }
 
-  async delete(id: number) {
-    await this.repository.delete(id);
+  async update(id: number, data: Partial<NewProduct>): Promise<Product | undefined> {
+    return this.productRepository.update(id, data);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    return this.productRepository.delete(id);
   }
 }

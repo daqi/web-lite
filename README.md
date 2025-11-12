@@ -18,6 +18,8 @@
 - ✅ **Valibot** - 轻量级请求校验
 - 🔧 **Plop.js** - 自动化模块代码生成
 - 🤖 **自动生成 Validator** - 从 Drizzle Schema 自动生成 Valibot 校验器
+- 🎯 **模型驱动开发** - 通过定义模型配置自动生成完整模块代码
+- ✨ **约定式开发** - 自动扫描模型文件，自动注册路由，零配置开发
 
 ## 📦 安装
 
@@ -155,7 +157,29 @@ web-lite/
 
 ## 📚 开发流程
 
-### 添加新功能模块
+### 方式 1: JSON 模型驱动开发（推荐）⭐
+
+1. **创建 JSON 模型定义**
+   ```bash
+   # 在 src/models/ 中创建 JSON 模型
+   # 例如: article.model.json
+   ```
+
+2. **生成完整模块**
+   ```bash
+   pnpm run generate:model article
+   # 自动生成 Schema、Validator、Repository、Service、Route
+   # 自动注册到 schema/index.ts 和 router.ts
+   ```
+
+3. **更新数据库**
+   ```bash
+   pnpm run db:push
+   ```
+
+详细文档: [JSON 模型定义指南](./docs/JSON_MODEL.md)
+
+### 方式 2: 传统开发流程
 
 1. **创建数据表**
    ```bash
@@ -189,7 +213,8 @@ web-lite/
 ## 🎯 核心优势
 
 1. **类型安全**: 从数据库到 API 的端到端类型安全
-2. **自动化**: Schema → Validator 自动生成,减少手写代码
+2. **模型驱动**: 定义一次模型，自动生成全部代码（Schema、Validator、Repository、Service、Route）
+3. **自动化**: Schema → Validator 自动生成,减少手写代码
 3. **模块化**: 清晰的分层架构 (Repository → Service → Route)
 4. **快速开发**: Plop 模板快速生成标准化代码
 5. **轻量高效**: Hono + Valibot 性能优异

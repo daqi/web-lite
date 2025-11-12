@@ -3,37 +3,61 @@ import { vValidator } from '@hono/valibot-validator';
 import { ProductService } from './product.service';
 import { createProductSchema, updateProductSchema } from '../../validators/product.validator';
 
-const service = new ProductService();
-const route = new Hono();
+/**
+ * 商品管理模型 Routes
+ * Auto-generated from model definition
+ */
+const app = new Hono();
+const productService = new ProductService();
 
-route.get('/', async (c) => {
-  const items = await service.list();
+// 获取所有商品管理模型
+app.get('/', async (c) => {
+  const items = await productService.getAll();
   return c.json(items);
 });
 
-route.get('/:id', async (c) => {
+// 获取单个商品管理模型
+app.get('/:id', async (c) => {
   const id = Number(c.req.param('id'));
-  const item = await service.get(id);
+  const item = await productService.getById(id);
+
+  if (!item) {
+    return c.json({ error: 'Product not found' }, 404);
+  }
+
   return c.json(item);
 });
 
-route.post('/', vValidator('json', createProductSchema), async (c) => {
-  const body = c.req.valid('json');
-  const item = await service.create(body);
+// 创建商品管理模型
+app.post('/', vValidator('json', createProductSchema), async (c) => {
+  const data = c.req.valid('json');
+  const item = await productService.create(data);
   return c.json(item, 201);
 });
 
-route.put('/:id', vValidator('json', updateProductSchema), async (c) => {
+// 更新商品管理模型
+app.put('/:id', vValidator('json', updateProductSchema), async (c) => {
   const id = Number(c.req.param('id'));
-  const body = c.req.valid('json');
-  const item = await service.update(id, body);
+  const data = c.req.valid('json');
+  const item = await productService.update(id, data);
+
+  if (!item) {
+    return c.json({ error: 'Product not found' }, 404);
+  }
+
   return c.json(item);
 });
 
-route.delete('/:id', async (c) => {
+// 删除商品管理模型
+app.delete('/:id', async (c) => {
   const id = Number(c.req.param('id'));
-  await service.delete(id);
-  return c.json({ success: true });
+  const success = await productService.delete(id);
+
+  if (!success) {
+    return c.json({ error: 'Product not found' }, 404);
+  }
+
+  return c.json({ message: 'Product deleted successfully' });
 });
 
-export default route;
+export const productRoute = app;

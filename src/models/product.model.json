@@ -1,0 +1,91 @@
+{
+  "name": "Product",
+  "tableName": "products",
+  "description": "商品管理",
+  "fields": [
+    {
+      "name": "id",
+      "type": "integer",
+      "primaryKey": true,
+      "autoIncrement": true,
+      "description": "商品ID"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "validation": {
+        "min": 1,
+        "max": 200
+      },
+      "description": "商品名称"
+    },
+    {
+      "name": "description",
+      "type": "text",
+      "description": "商品描述"
+    },
+    {
+      "name": "price",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "required": true,
+      "validation": {
+        "min": 0
+      },
+      "description": "商品价格"
+    },
+    {
+      "name": "stock",
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "validation": {
+        "min": 0
+      },
+      "description": "库存数量"
+    },
+    {
+      "name": "categoryId",
+      "type": "integer",
+      "required": true,
+      "reference": {
+        "table": "categories",
+        "field": "id",
+        "onDelete": "cascade"
+      },
+      "description": "所属分类ID"
+    },
+    {
+      "name": "sku",
+      "type": "string",
+      "unique": true,
+      "description": "商品SKU"
+    },
+    {
+      "name": "isActive",
+      "type": "boolean",
+      "default": true,
+      "description": "是否上架"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_product_category",
+      "fields": ["categoryId"]
+    },
+    {
+      "name": "idx_product_sku",
+      "fields": ["sku"],
+      "unique": true
+    }
+  ],
+  "api": {
+    "list": { "enabled": true, "auth": false },
+    "get": { "enabled": true, "auth": false },
+    "create": { "enabled": true, "auth": true, "roles": ["admin", "manager"] },
+    "update": { "enabled": true, "auth": true, "roles": ["admin", "manager"] },
+    "delete": { "enabled": true, "auth": true, "roles": ["admin"] }
+  }
+}

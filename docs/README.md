@@ -2,9 +2,12 @@
 
 欢迎来到 Web Lite 项目文档中心!这里包含了所有相关的技术文档和指南。
 
-## � 文档目录
+## 📖 文档目录
 
 - [**快速开始**](./QUICKSTART.md) - 项目快速上手指南
+- [**JSON 模型定义**](./JSON_MODEL.md) - ⭐ 使用 JSON 定义模型（推荐）
+- [**约定式开发**](./CONVENTION_AND_CONFIGURATION.md) - ✨ 自动扫描和注册，零配置开发
+- [**路由管理**](./ROUTER.md) - 🔀 router.ts 路由入口说明
 - [**架构设计**](./ARCHITECTURE.md) - 项目架构与技术栈说明
 - [**数据库设计**](./DATABASE_SCHEMA.md) - 数据库表结构与关系
 - [**Docker 部署**](./DOCKER.md) - Docker 容器化部署指南
@@ -17,13 +20,17 @@
 
 ### 入门流程
 1. 📘 [快速开始](./QUICKSTART.md) - 第一次运行项目
-2. 🏗️ [架构设计](./ARCHITECTURE.md) - 理解项目结构
-3. 🗄️ [数据库设计](./DATABASE_SCHEMA.md) - 了解数据模型
+2. ⭐ [JSON 模型快速开始](./JSON_MODEL_QUICKSTART.md) - 5 分钟创建完整模块
+3. 📖 [JSON 模型定义](./JSON_MODEL.md) - 完整 JSON 配置指南
+4. ✨ [约定式开发](./CONVENTION_AND_CONFIGURATION.md) - 零配置开发
+5. 🏗️ [架构设计](./ARCHITECTURE.md) - 理解项目结构
+6. 🗄️ [数据库设计](./DATABASE_SCHEMA.md) - 了解数据模型
 
 ### 开发流程
-1. 🤖 [生成 Validators](./VALIDATOR_GENERATION.md) - 创建验证器
-2. 📦 [使用 Plop](../README.md#-代码生成) - 生成新模块
-3. 🐳 [Docker 指南](./DOCKER.md) - 管理数据库
+1. 🎯 [约定式开发](./CONVENTION_AND_CONFIGURATION.md) - 自动扫描和注册（推荐）
+2. 🎯 [JSON 模型定义](./JSON_MODEL.md) - 定义模型，自动生成代码
+3. 🔀 [路由管理](./ROUTER.md) - 路由自动注册
+4. 🐳 [Docker 指南](./DOCKER.md) - 管理数据库
 
 ## 📝 文档维护
 
@@ -45,8 +52,8 @@
 - **PostgreSQL**: [DOCKER.md](./DOCKER.md)
 
 ### 代码生成
+- **JSON 模型生成**: [JSON_MODEL.md](./JSON_MODEL.md) ⭐ 推荐
 - **Validator 生成**: [VALIDATOR_GENERATION.md](./VALIDATOR_GENERATION.md)
-- **模块生成 (Plop)**: [ARCHITECTURE.md](./ARCHITECTURE.md#代码生成)
 
 ### 部署运维
 - **Docker**: [DOCKER.md](./DOCKER.md)
@@ -60,4 +67,4 @@
 
 ## 📅 最后更新
 
-2025年11月10日 - 统一命名规范,移除复数形式
+2025年11月12日 - 改为仅支持 JSON 模型格式

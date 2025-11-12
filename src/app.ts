@@ -1,8 +1,5 @@
 import { Hono } from 'hono';
-import { userRoute } from './modules/user';
-import { productRoute } from './modules/product';
-import { orderRoute } from './modules/order';
-import { authRoute } from './modules/auth';
+import router from './router';
 
 const app = new Hono();
 
@@ -15,11 +12,8 @@ app.get('/', (c) => {
   });
 });
 
-// 注册路由
-app.route('/auth', authRoute);
-app.route('/user', userRoute);
-app.route('/product', productRoute);
-app.route('/order', orderRoute);
+// 注册自动生成的路由
+app.route('/', router);
 
 // 错误处理
 app.onError((err, c) => {

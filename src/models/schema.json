@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://web-lite.com/schemas/model.json",
+  "title": "Model Definition Schema",
+  "description": "Web Lite 模型定义的 JSON Schema",
+  "type": "object",
+  "required": ["name", "fields"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "模型名称（PascalCase）",
+      "pattern": "^[A-Z][a-zA-Z0-9]*$",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "tableName": {
+      "type": "string",
+      "description": "数据库表名（默认为 name 的 snake_case 复数形式）",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "description": {
+      "type": "string",
+      "description": "模型描述",
+      "maxLength": 500
+    },
+    "fields": {
+      "type": "array",
+      "description": "字段定义列表",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/field"
+      }
+    },
+    "indexes": {
+      "type": "array",
+      "description": "索引定义列表",
+      "items": {
+        "$ref": "#/definitions/index"
+      }
+    },
+    "timestamps": {
+      "type": "object",
+      "description": "时间戳字段配置",
+      "properties": {
+        "createdAt": {
+          "type": "boolean",
+          "description": "是否添加 createdAt 字段",
+          "default": true
+        },
+        "updatedAt": {
+          "type": "boolean",
+          "description": "是否添加 updatedAt 字段",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "softDelete": {
+      "type": "boolean",
+      "description": "是否启用软删除",
+      "default": false
+    },
+    "api": {
+      "type": "object",
+      "description": "API 接口配置",
+      "properties": {
+        "list": {
+          "$ref": "#/definitions/apiEndpoint"
+        },
+        "get": {
+          "$ref": "#/definitions/apiEndpoint"
+        },
+        "create": {
+          "$ref": "#/definitions/apiEndpoint"
+        },
+        "update": {
+          "$ref": "#/definitions/apiEndpoint"
+        },
+        "delete": {
+          "$ref": "#/definitions/apiEndpoint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "generate": {
+      "type": "object",
+      "description": "代码生成配置",
+      "properties": {
+        "schema": {
+          "type": "boolean",
+          "description": "是否生成 Drizzle Schema",
+          "default": true
+        },
+        "repository": {
+          "type": "boolean",
+          "description": "是否生成 Repository",
+          "default": true
+        },
+        "service": {
+          "type": "boolean",
+          "description": "是否生成 Service",
+          "default": true
+        },
+        "route": {
+          "type": "boolean",
+          "description": "是否生成 Route",
+          "default": true
+        },
+        "validator": {
+          "type": "boolean",
+          "description": "是否生成 Validator",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "field": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "字段名称（camelCase）",
+          "pattern": "^[a-z][a-zA-Z0-9]*$",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "type": {
+          "type": "string",
+          "description": "字段类型",
+          "enum": [
+            "string",
+            "text",
+            "integer",
+            "decimal",
+            "boolean",
+            "date",
+            "datetime",
+            "json",
+            "uuid"
+          ]
+        },
+        "primaryKey": {
+          "type": "boolean",
+          "description": "是否为主键",
+          "default": false
+        },
+        "autoIncrement": {
+          "type": "boolean",
+          "description": "是否自增（仅 integer 主键可用）",
+          "default": false
+        },
+        "required": {
+          "type": "boolean",
+          "description": "是否必填（NOT NULL）",
+          "default": false
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "是否唯一",
+          "default": false
+        },
+        "default": {
+          "description": "默认值"
+        },
+        "length": {
+          "type": "integer",
+          "description": "字段长度（string 类型）",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "precision": {
+          "type": "integer",
+          "description": "精度（decimal 类型）",
+          "minimum": 1,
+          "maximum": 65
+        },
+        "scale": {
+          "type": "integer",
+          "description": "小数位数（decimal 类型）",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "validation": {
+          "type": "object",
+          "description": "验证规则",
+          "properties": {
+            "min": {
+              "type": "number",
+              "description": "最小值/最小长度"
+            },
+            "max": {
+              "type": "number",
+              "description": "最大值/最大长度"
+            },
+            "pattern": {
+              "type": "string",
+              "description": "正则表达式"
+            },
+            "email": {
+              "type": "boolean",
+              "description": "是否为邮箱格式"
+            },
+            "url": {
+              "type": "boolean",
+              "description": "是否为 URL 格式"
+            },
+            "enum": {
+              "type": "array",
+              "description": "枚举值列表",
+              "items": {
+                "type": ["string", "number"]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "reference": {
+          "type": "object",
+          "description": "外键引用",
+          "required": ["table", "field"],
+          "properties": {
+            "table": {
+              "type": "string",
+              "description": "引用的表名"
+            },
+            "field": {
+              "type": "string",
+              "description": "引用的字段名"
+            },
+            "onDelete": {
+              "type": "string",
+              "description": "删除时的行为",
+              "enum": ["cascade", "set null", "restrict", "no action"],
+              "default": "cascade"
+            },
+            "onUpdate": {
+              "type": "string",
+              "description": "更新时的行为",
+              "enum": ["cascade", "set null", "restrict", "no action"],
+              "default": "cascade"
+            }
+          },
+          "additionalProperties": false
+        },
+        "description": {
+          "type": "string",
+          "description": "字段描述",
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    },
+    "index": {
+      "type": "object",
+      "required": ["name", "fields"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "索引名称",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "fields": {
+          "type": "array",
+          "description": "索引字段列表",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "是否为唯一索引",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "apiEndpoint": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "是否启用该接口",
+          "default": true
+        },
+        "auth": {
+          "type": "boolean",
+          "description": "是否需要认证",
+          "default": false
+        },
+        "roles": {
+          "type": "array",
+          "description": "允许的角色列表",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
