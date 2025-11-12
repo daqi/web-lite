@@ -4,7 +4,7 @@
  * 从模型定义生成代码
  */
 
-import { ModelDefinition, FieldDefinition } from '../src/models/types';
+import { ModelDefinition, FieldDefinition } from './model-loader/types';
 import pluralize from 'pluralize';
 import { pascalCase, camelCase, snakeCase } from 'change-case';
 

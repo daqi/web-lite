@@ -18,10 +18,11 @@ import {
   generateRoute,
   generateModuleIndex,
 } from './model-generator';
-import { models } from '../src/models';
+import { loadModelsSync } from './model-loader/loader';
 import { snakeCase } from 'change-case';
 import { scanRoutes, updateRouterFile, scanSchemas, updateSchemaIndex } from './route-register';
 
+const models = loadModelsSync();
 const modelName = process.argv[2];
 
 if (!modelName) {

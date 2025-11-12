@@ -10,7 +10,7 @@ import path from 'path';
 import type { ModelDefinition } from './types';
 
 // 读取 JSON Schema
-const schemaPath = path.join(__dirname, 'schema.json');
+const schemaPath = path.join(__dirname, 'model-schema.json');
 const modelSchema = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'));
 
 // 创建 Ajv 实例
