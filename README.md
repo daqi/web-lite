@@ -1,8 +1,8 @@
-# Web Lite
+# Web Lite Edition
 
-一个基于 **Drizzle ORM + Hono + Valibot + JSON 模型驱动开发**的可运行示例。
+一个以元数据（JSON 模型）为核心的 CRUD 自动化引擎示例：只需定义一次 JSON 模型，即可自动生成 Drizzle Schema、Valibot 校验器、Repository/Service/Route，并完成约定式路由注册。
 
-这个架构以轻量化为目标，且具备现代 TypeScript 全栈最佳实践。
+基于 Hono + Drizzle ORM + Valibot，轻量、类型安全，符合现代 TypeScript 全栈最佳实践。
 
 适合的使用场景包括：
 - SaaS 或 BaaS 轻后端

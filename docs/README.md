@@ -1,6 +1,6 @@
-# 📚 Web Lite 文档中心
+# 📚 Web Lite Edition 文档中心
 
-欢迎来到 Web Lite 项目文档中心!这里包含了所有相关的技术文档和指南。
+欢迎来到 Web Lite Edition 文档中心！这里包含了所有相关的技术文档和指南。
 
 ## 📖 文档目录
 

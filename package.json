@@ -1,7 +1,7 @@
 {
   "name": "web-lite",
   "version": "1.0.0",
-  "description": "Drizzle ORM + Hono + Valibot + JSON 模型驱动开发",
+  "description": "Metadata-driven CRUD engine from JSON models (Hono + Drizzle ORM + Valibot)",
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
