@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import app from '../../src/app';
+import { getResponseData } from '../helpers/response.helper';
 
 describe('Order API 集成测试', () => {
   let userId: number;
   let orderId: number;
-  const suffix = Date.now();
+  const suffix = Date.now().toString().slice(-5);
 
   beforeAll(async () => {
     // 创建一个用户用于下单（确保唯一）
@@ -17,7 +18,8 @@ describe('Order API 集成测试', () => {
         role: 'user',
       }),
     });
-    const data = await res.json();
+    const json = await res.json();
+    const data = getResponseData(json);
     userId = data.id;
   });
 
@@ -37,14 +39,13 @@ describe('Order API 集成测试', () => {
       body: JSON.stringify(payload),
     });
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(201);
 
-    if (response.status === 201) {
-      const data = await response.json();
-      expect(data).toHaveProperty('id');
-      expect(data.userId).toBe(userId);
-      orderId = data.id;
-    }
+    const json = await response.json();
+    const data = getResponseData(json);
+    expect(data).toHaveProperty('id');
+    expect(data.userId).toBe(userId);
+    orderId = data.id;
   });
 
   it('应该拒绝无效的 userId', async () => {
@@ -60,7 +61,8 @@ describe('Order API 集成测试', () => {
   it('GET /orders 返回列表', async () => {
     const response = await app.request('/orders', { method: 'GET' });
     expect(response.status).toBe(200);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(Array.isArray(data)).toBe(true);
   });
 
@@ -68,7 +70,8 @@ describe('Order API 集成测试', () => {
     if (!orderId) return; // order 未创建，跳过后续断言
     const response = await app.request(`/orders/${orderId}`, { method: 'GET' });
     expect(response.status).toBe(200);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(data.id).toBe(orderId);
   });
 
@@ -81,7 +84,8 @@ describe('Order API 集成测试', () => {
     });
 
     expect(response.status).toBe(200);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(data.status).toBe('completed');
   });
 

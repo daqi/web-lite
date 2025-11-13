@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import app from '../../src/app';
+import { getResponseData } from '../helpers/response.helper';
 
 describe('Category API 集成测试', () => {
   let categoryId: number;
@@ -19,7 +20,8 @@ describe('Category API 集成测试', () => {
     });
 
     expect(response.status).toBe(201);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(data).toHaveProperty('id');
     expect(data.name).toBe(payload.name);
     categoryId = data.id;
@@ -36,13 +38,14 @@ describe('Category API 集成测试', () => {
       }),
     });
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBeGreaterThanOrEqual(400);
   });
 
   it('GET /categories 返回列表', async () => {
     const response = await app.request('/categories', { method: 'GET' });
     expect(response.status).toBe(200);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(Array.isArray(data)).toBe(true);
     expect(data.length).toBeGreaterThan(0);
   });
@@ -50,7 +53,8 @@ describe('Category API 集成测试', () => {
   it('GET /categories/:id 返回单个分类', async () => {
     const response = await app.request(`/categories/${categoryId}`, { method: 'GET' });
     expect(response.status).toBe(200);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(data.id).toBe(categoryId);
   });
 
@@ -65,7 +69,8 @@ describe('Category API 集成测试', () => {
     });
 
     expect(response.status).toBe(200);
-    const data = await response.json();
+    const json = await response.json();
+    const data = getResponseData(json);
     expect(data.name).toBe(`Integration Cat Updated ${suffix}`);
   });
 

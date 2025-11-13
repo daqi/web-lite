@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import app from '../../src/app';
+import { getResponseData } from '../helpers/response.helper';
 
 describe('Auth API 集成测试', () => {
   let accessToken: string;
@@ -21,7 +22,8 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(201);
 
-      const data = await response.json();
+      const json = await response.json();
+      const data = getResponseData(json);
       expect(data).toHaveProperty('user');
       expect(data).toHaveProperty('accessToken');
       expect(data).toHaveProperty('refreshToken');
@@ -43,8 +45,9 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(400);
 
-      const data = await response.json();
-      expect(data).toHaveProperty('error');
+      const json = await response.json();
+      expect(json).toHaveProperty('code');
+      expect(json.code).toBeGreaterThanOrEqual(400);
     });
 
     it('应该验证必填字段', async () => {
@@ -75,7 +78,8 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(200);
 
-      const data = await response.json();
+      const json = await response.json();
+      const data = getResponseData(json);
       expect(data).toHaveProperty('user');
       expect(data).toHaveProperty('accessToken');
       expect(data).toHaveProperty('refreshToken');
@@ -123,7 +127,8 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(200);
 
-      const data = await response.json();
+      const json = await response.json();
+      const data = getResponseData(json);
       expect(data).toHaveProperty('id');
       expect(data.username).toBe(testUser.username);
     });
@@ -158,7 +163,8 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(200);
 
-      const data = await response.json();
+      const json = await response.json();
+      const data = getResponseData(json);
       expect(data).toHaveProperty('accessToken');
       expect(data).toHaveProperty('refreshToken');
 
@@ -201,8 +207,8 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(200);
 
-      const data = await response.json();
-      expect(data).toHaveProperty('message');
+      const json = await response.json();
+      expect(json).toHaveProperty('message');
     });
 
     it('登出后 refresh token 应该失效', async () => {
@@ -228,7 +234,8 @@ describe('Auth API 集成测试', () => {
         }),
       });
 
-      const loginData = await loginResponse.json();
+      const loginJson = await loginResponse.json();
+      const loginData = getResponseData(loginJson);
       const newAccessToken = loginData.accessToken;
 
       // 登出所有设备
@@ -241,8 +248,8 @@ describe('Auth API 集成测试', () => {
 
       expect(response.status).toBe(200);
 
-      const data = await response.json();
-      expect(data).toHaveProperty('message');
+      const json = await response.json();
+      expect(json).toHaveProperty('message');
     });
   });
 });

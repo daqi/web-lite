@@ -459,7 +459,7 @@ export const generateRoute = (model: ModelDefinition): string => {
 // 获取所有${model.description || modelName}
 app.get('/', async (c) => {
   const items = await ${serviceName}.getAll();
-  return c.json(items);
+  return c.apiSuccess(items);
 });`);
   }
 
@@ -472,10 +472,10 @@ app.get('/:id', async (c) => {
   const item = await ${serviceName}.getById(id);
 
   if (!item) {
-    return c.json({ error: '${modelName} not found' }, 404);
+    return c.apiNotFound('${modelName} not found');
   }
 
-  return c.json(item);
+  return c.apiSuccess(item);
 });`);
   }
 
@@ -486,7 +486,7 @@ app.get('/:id', async (c) => {
 app.post('/', vValidator('json', create${modelName}Schema), async (c) => {
   const data = c.req.valid('json');
   const item = await ${serviceName}.create(data);
-  return c.json(item, 201);
+  return c.apiCreated(item);
 });`);
   }
 
@@ -500,10 +500,10 @@ app.put('/:id', vValidator('json', update${modelName}Schema), async (c) => {
   const item = await ${serviceName}.update(id, data);
 
   if (!item) {
-    return c.json({ error: '${modelName} not found' }, 404);
+    return c.apiNotFound('${modelName} not found');
   }
 
-  return c.json(item);
+  return c.apiSuccess(item);
 });`);
   }
 
@@ -516,10 +516,10 @@ app.delete('/:id', async (c) => {
   const success = await ${serviceName}.delete(id);
 
   if (!success) {
-    return c.json({ error: '${modelName} not found' }, 404);
+    return c.apiNotFound('${modelName} not found');
   }
 
-  return c.json({ message: '${modelName} deleted successfully' });
+  return c.apiSuccess(null, 'Deleted successfully');
 });`);
   }
 

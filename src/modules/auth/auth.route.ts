@@ -16,10 +16,10 @@ route.post('/register', vValidator('json', registerSchema), async (c) => {
 
   try {
     const result = await service.register(body);
-    return c.json(result, 201);
+    return c.apiCreated(result, 'User registered successfully');
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Registration failed';
-    return c.json({ error: message }, 400);
+    return c.apiError(message, 400);
   }
 });
 
@@ -35,10 +35,10 @@ route.post('/login', vValidator('json', loginSchema), async (c) => {
 
   try {
     const result = await service.login(body, deviceInfo);
-    return c.json(result);
+    return c.apiSuccess(result, 'Login successful');
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Login failed';
-    return c.json({ error: message }, 401);
+    return c.apiUnauthorized(message);
   }
 });
 
@@ -51,10 +51,10 @@ route.post('/refresh', vValidator('json', refreshTokenSchema), async (c) => {
 
   try {
     const result = await service.refreshToken(refreshToken);
-    return c.json(result);
+    return c.apiSuccess(result, 'Token refreshed successfully');
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Token refresh failed';
-    return c.json({ error: message }, 401);
+    return c.apiUnauthorized(message);
   }
 });
 
@@ -67,10 +67,10 @@ route.post('/logout', authMiddleware, vValidator('json', refreshTokenSchema), as
 
   try {
     await service.logout(refreshToken);
-    return c.json({ message: 'Logged out successfully' });
+    return c.apiSuccess(null, 'Logged out successfully');
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Logout failed';
-    return c.json({ error: message }, 400);
+    return c.apiError(message, 400);
   }
 });
 
@@ -83,10 +83,10 @@ route.post('/logout-all', authMiddleware, async (c) => {
 
   try {
     await service.logoutAll(user.userId);
-    return c.json({ message: 'Logged out from all devices' });
+    return c.apiSuccess(null, 'Logged out from all devices');
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Logout failed';
-    return c.json({ error: message }, 400);
+    return c.apiError(message, 400);
   }
 });
 
@@ -99,10 +99,10 @@ route.get('/profile', authMiddleware, async (c) => {
 
   try {
     const profile = await service.getProfile(user.userId);
-    return c.json(profile);
+    return c.apiSuccess(profile);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to get profile';
-    return c.json({ error: message }, 404);
+    return c.apiNotFound(message);
   }
 });
 

@@ -13,7 +13,7 @@ const orderService = new OrderService();
 // 获取所有订单管理
 app.get('/', async (c) => {
   const items = await orderService.getAll();
-  return c.json(items);
+  return c.apiSuccess(items);
 });
 
 // 获取单个订单管理
@@ -22,17 +22,17 @@ app.get('/:id', async (c) => {
   const item = await orderService.getById(id);
 
   if (!item) {
-    return c.json({ error: 'Order not found' }, 404);
+    return c.apiNotFound('Order not found');
   }
 
-  return c.json(item);
+  return c.apiSuccess(item);
 });
 
 // 创建订单管理
 app.post('/', vValidator('json', createOrderSchema), async (c) => {
   const data = c.req.valid('json');
   const item = await orderService.create(data);
-  return c.json(item, 201);
+  return c.apiCreated(item);
 });
 
 // 更新订单管理
@@ -42,10 +42,10 @@ app.put('/:id', vValidator('json', updateOrderSchema), async (c) => {
   const item = await orderService.update(id, data);
 
   if (!item) {
-    return c.json({ error: 'Order not found' }, 404);
+    return c.apiNotFound('Order not found');
   }
 
-  return c.json(item);
+  return c.apiSuccess(item);
 });
 
 // 删除订单管理
@@ -54,10 +54,10 @@ app.delete('/:id', async (c) => {
   const success = await orderService.delete(id);
 
   if (!success) {
-    return c.json({ error: 'Order not found' }, 404);
+    return c.apiNotFound('Order not found');
   }
 
-  return c.json({ message: 'Order deleted successfully' });
+  return c.apiSuccess(null, 'Deleted successfully');
 });
 
 export const orderRoute = app;
